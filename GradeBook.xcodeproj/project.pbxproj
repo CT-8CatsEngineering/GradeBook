@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		533A9EFE1E897D0A0005EE22 /* NewClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */; };
+		533A9F001E8985320005EE22 /* SubjectCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */; };
+		533A9F021E8C16FC0005EE22 /* ClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */; };
+		533A9F041E8C30130005EE22 /* StudentListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9F031E8C30130005EE22 /* StudentListCell.swift */; };
+		535F223F1E82EA680059C9DB /* designNotes.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 535F223E1E82EA680059C9DB /* designNotes.rtf */; };
 		53F81FEB1E6A39B3003447D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F81FEA1E6A39B3003447D4 /* AppDelegate.swift */; };
 		53F81FED1E6A39B3003447D4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F81FEC1E6A39B3003447D4 /* ViewController.swift */; };
 		53F81FF01E6A39B3003447D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53F81FEE1E6A39B3003447D4 /* Main.storyboard */; };
@@ -17,7 +22,6 @@
 		53F8200D1E6A3BFE003447D4 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F8200C1E6A3BFE003447D4 /* Subject.swift */; };
 		53F8200F1E6A3C0F003447D4 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F8200E1E6A3C0F003447D4 /* Student.swift */; };
 		53F820111E6A3C47003447D4 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F820101E6A3C47003447D4 /* Assignment.swift */; };
-		53F820131E6A579A003447D4 /* designNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F820121E6A579A003447D4 /* designNotes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +35,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewClassViewController.swift; sourceTree = "<group>"; };
+		533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubjectCollectionCell.swift; sourceTree = "<group>"; };
+		533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassTableViewCell.swift; sourceTree = "<group>"; };
+		533A9F031E8C30130005EE22 /* StudentListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentListCell.swift; sourceTree = "<group>"; };
+		535F223E1E82EA680059C9DB /* designNotes.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = designNotes.rtf; sourceTree = "<group>"; };
 		53F81FE71E6A39B3003447D4 /* GradeBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GradeBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53F81FEA1E6A39B3003447D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		53F81FEC1E6A39B3003447D4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -45,7 +54,6 @@
 		53F8200C1E6A3BFE003447D4 /* Subject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
 		53F8200E1E6A3C0F003447D4 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		53F820101E6A3C47003447D4 /* Assignment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
-		53F820121E6A579A003447D4 /* designNotes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = designNotes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +77,7 @@
 		53F81FDE1E6A39B3003447D4 = {
 			isa = PBXGroup;
 			children = (
+				535F223E1E82EA680059C9DB /* designNotes.rtf */,
 				53F81FE91E6A39B3003447D4 /* GradeBook */,
 				53F81FFE1E6A39B3003447D4 /* GradeBookTests */,
 				53F81FE81E6A39B3003447D4 /* Products */,
@@ -89,6 +98,10 @@
 			children = (
 				53F81FEA1E6A39B3003447D4 /* AppDelegate.swift */,
 				53F81FEC1E6A39B3003447D4 /* ViewController.swift */,
+				533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */,
+				533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */,
+				533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */,
+				533A9F031E8C30130005EE22 /* StudentListCell.swift */,
 				53F81FEE1E6A39B3003447D4 /* Main.storyboard */,
 				53F8200A1E6A3BE9003447D4 /* Classroom.swift */,
 				53F8200C1E6A3BFE003447D4 /* Subject.swift */,
@@ -97,7 +110,6 @@
 				53F81FF11E6A39B3003447D4 /* Assets.xcassets */,
 				53F81FF31E6A39B3003447D4 /* LaunchScreen.storyboard */,
 				53F81FF61E6A39B3003447D4 /* Info.plist */,
-				53F820121E6A579A003447D4 /* designNotes.swift */,
 			);
 			path = GradeBook;
 			sourceTree = "<group>";
@@ -195,6 +207,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535F223F1E82EA680059C9DB /* designNotes.rtf in Resources */,
 				53F81FF51E6A39B3003447D4 /* LaunchScreen.storyboard in Resources */,
 				53F81FF21E6A39B3003447D4 /* Assets.xcassets in Resources */,
 				53F81FF01E6A39B3003447D4 /* Main.storyboard in Resources */,
@@ -215,13 +228,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				533A9EFE1E897D0A0005EE22 /* NewClassViewController.swift in Sources */,
 				53F820111E6A3C47003447D4 /* Assignment.swift in Sources */,
+				533A9F001E8985320005EE22 /* SubjectCollectionCell.swift in Sources */,
+				533A9F041E8C30130005EE22 /* StudentListCell.swift in Sources */,
 				53F8200D1E6A3BFE003447D4 /* Subject.swift in Sources */,
-				53F820131E6A579A003447D4 /* designNotes.swift in Sources */,
 				53F8200B1E6A3BE9003447D4 /* Classroom.swift in Sources */,
 				53F81FED1E6A39B3003447D4 /* ViewController.swift in Sources */,
 				53F8200F1E6A3C0F003447D4 /* Student.swift in Sources */,
 				53F81FEB1E6A39B3003447D4 /* AppDelegate.swift in Sources */,
+				533A9F021E8C16FC0005EE22 /* ClassTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +445,7 @@
 				53F820061E6A39B3003447D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		53F820071E6A39B3003447D4 /* Build configuration list for PBXNativeTarget "GradeBookTests" */ = {
 			isa = XCConfigurationList;
@@ -437,6 +454,7 @@
 				53F820091E6A39B3003447D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

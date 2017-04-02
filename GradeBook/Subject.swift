@@ -15,6 +15,8 @@ class Subject: NSObject, NSCoding {
     var abreviation:String = ""
     var assignments = [Assignment]()
     var gradingScale:Int = 100 //points out of. 100 for percentage, 4 for lower grades etc.
+    var earnedPoints:Int = 0 //the total points earned for the assignments
+    var totalPoints:Int = 0 // total points available for the assignments
     
     //MARK: types
     struct PropertyKey {
@@ -22,6 +24,8 @@ class Subject: NSObject, NSCoding {
         static let abreviation = "abr"
         static let assignments = "assignments"
         static let gradingScale = "gradingScale"
+        static let earnedPoints = "earnedPoints"
+        static let totalPoints = "totalPoints"
     }
     
     //MARK:initializers
@@ -38,13 +42,15 @@ class Subject: NSObject, NSCoding {
         self.abreviation = abr
     }
 
-    init?(name:String, abr:String, assignments:[Assignment], gradeScale:Int) {
+    init?(name:String, abr:String, assignments:[Assignment], gradeScale:Int, earnedPoints:Int, totalPoints:Int) {
         super.init()
         
         self.name = name
         self.abreviation = abr
         self.assignments = assignments
         self.gradingScale = gradeScale
+        self.earnedPoints = earnedPoints
+        self.totalPoints = totalPoints
     }
 //MARK: Coding functions
     func encode(with aCoder: NSCoder) {
@@ -52,6 +58,8 @@ class Subject: NSObject, NSCoding {
         aCoder.encode(abreviation, forKey: PropertyKey.abreviation)
         aCoder.encode(assignments, forKey: PropertyKey.assignments)
         aCoder.encode(gradingScale, forKey: PropertyKey.gradingScale)
+        aCoder.encode(earnedPoints, forKey: PropertyKey.earnedPoints)
+        aCoder.encode(totalPoints, forKey: PropertyKey.totalPoints)
     }
     
     required convenience init?(coder aDecoder:NSCoder) {
@@ -68,8 +76,24 @@ class Subject: NSObject, NSCoding {
         
         let assignments = aDecoder.decodeObject(forKey: PropertyKey.assignments) as! [Assignment]
         
+        let earnedPoints = aDecoder.decodeInteger(forKey: PropertyKey.earnedPoints)
         
-        self.init(name: name, abr: abreviation, assignments: assignments, gradeScale: gradingScale)
+        let totalPoints = aDecoder.decodeInteger(forKey: PropertyKey.totalPoints)
+
+        self.init(name: name, abr: abreviation, assignments: assignments, gradeScale: gradingScale, earnedPoints:earnedPoints, totalPoints:totalPoints)
+    }
+    
+    func addAssingment(newAssignment: Assignment) {
+        self.earnedPoints += newAssignment.grade
+        self.totalPoints += newAssignment.totalPoints
         
+        self.assignments.append(newAssignment)
+    }
+    func displayedGrade()->Int {
+        return earnedPoints/totalPoints * gradingScale
+    }
+    func subjectDescription()->String {
+        let displayedGrade = self.displayedGrade()
+        return "\(name) : \(abreviation) Grade: \(displayedGrade)"
     }
 }
