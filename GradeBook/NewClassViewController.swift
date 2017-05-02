@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class NewClassViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource  {
+class NewClassViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource  {
     @IBOutlet weak var studentListView: UITableView!
     @IBOutlet weak var classNameField: UITextField!
     @IBOutlet weak var filePicker: UIPickerView!
@@ -81,6 +81,9 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
             
             self.newClass!.setSubjects(array: selectedSubjects)
             self.newClass!.setStudents(array: studentObj)
+            for subject in selectedSubjects {
+                self.newClass!.classAverages[subject] = subject.gradingScale //default class average to the gradescale
+            }
             
             return
         }
@@ -93,21 +96,29 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         students[position]=inName
     }
     func loadFileNames() {
-        //also look into implementing UIDocumentPickerViewController later
+        //also look into implementing UIDocumentPickerViewController later and UIDocumentInteractionController
         let fileManager = FileManager.default
         let dirs = fileManager.urls(for: .documentDirectory, in: .userDomainMask).last
         var filename = dirs
-        let string = "Joe Smith,Ann Lin,Zack Smith,Beth Lin,Laura Smith,Larry Lin,Ben Smith,Mary Lin"
+        let nameString = "Joe Smith,Ann Lin,Zack Smith,Beth Lin,Laura Smith,Larry Lin,Ben Smith,Mary Lin"
+        let nameString2 = "Bob Dylan,Jeff Morrison,Zack Taylor,Kelsey Gram,Lindsey Lohan,Kattie Perry"
         do {
             filename?.appendPathComponent("testFile.rtf")
+            let filename2 = dirs?.appendingPathComponent("testFile2.rft")
             if !fileManager.fileExists(atPath: (filename?.absoluteString)!) {
-                try string.write(to: filename!, atomically: false, encoding: String.Encoding.utf8)
+                try nameString.write(to: filename!, atomically: false, encoding: String.Encoding.utf8)
+            }
+            if !fileManager.fileExists(atPath: (filename2?.absoluteString)!) {
+                try nameString2.write(to: filename2!, atomically: false, encoding: String.Encoding.utf8)
             }
             let dirsPath = (dirs?.path)!
-            let contents = try fileManager.subpaths(atPath:dirsPath )
+            let contents = fileManager.subpaths(atPath:dirsPath )
 
-            print("starting path \(dirs)")
-            print("contents of dir: \(contents)")
+            print("starting path \(dirs!)")
+            print("contents of dir: \(contents!)")
+            for pathString in contents! {
+                filenames.append((dirs?.appendingPathComponent(pathString).absoluteString)!)
+            }
         } catch {
             print("failed to write to file or get contents")
         }
@@ -118,17 +129,24 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     func loadStudentsFromFile() {
         
-        //temp testing students array.
-        students.append("Joe Smith")
-        students.append("Ann Lin")
-        students.append("Zack Smith")
-        students.append("Beth Lin")
-        students.append("Laura Smith")
-        students.append("Larry Lin")
-        students.append("Ben Smith")
-        students.append("Mary Lin")
+        let selectedFileIndex = filePicker.selectedRow(inComponent: 0)
+        let selectedFilename = filenames[selectedFileIndex]
+        
+        do {
+            let fileString = try String.init(contentsOf: URL.init(string: selectedFilename)!)
+            let studentLines = fileString.components(separatedBy: ",")
+            
+            for studentName in studentLines {
+                students.append(studentName)
+            }
+        
+        }
+        catch {
+            print("error reading from file")
+        }
         
     }
+    
     func loadStudents(inClassroom:Classroom)->[Student] {
         var studentObjects = [Student]()
         
@@ -222,5 +240,17 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
+    }
+    
+    //UIPickerViewDelegate functions
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?{
+        return URL.init(string:filenames[row])?.lastPathComponent
+    }
+    //UIPickerViewDataSource functions
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return filenames.count
     }
 }

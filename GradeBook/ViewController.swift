@@ -46,6 +46,32 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         return defaultSubjects
     }
+    func reloadTableContents() {
+        classesTable.reloadData()
+    }
+    
+    //MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        super.prepare(for: segue, sender: sender)
+        
+        if (segue.identifier == "classroomSegue") {
+            let navControl = segue.destination as? UINavigationController
+            guard let classroom = navControl?.topViewController as? ClassroomViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            guard let classCell = sender as? ClassTableViewCell else {
+                fatalError("Unexpected sender: \(String(describing: sender))")
+            }
+            
+            classroom.classroom = classCell.classObject
+        }
+        
+        
+    }
     @IBAction func unwindToClassList(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? NewClassViewController, let newClass = sourceViewController.newClass {
             //save changes
@@ -56,10 +82,6 @@ class ViewController: UIViewController, UITableViewDataSource {
             
         }
     }
-
-    func reloadTableContents() {
-        classesTable.reloadData()
-    }
     
     //UITableViewDataSource functions
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -67,6 +89,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         cell.ClassNameView.text = classes[indexPath.last!].className
         cell.StudentNumber.text = "\(classes[indexPath.last!].students.count) Students"
+        cell.classObject = classes[indexPath.last!]
         
         return cell
     }

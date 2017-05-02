@@ -22,13 +22,21 @@ class Classroom: NSObject {
         
         className = name
         
+        for subject in subjects {
+            classAverages[subject] = 0
+        }
+        
     }
     
     func setSubjects(array: [Subject]) {
         subjects = array
+        for subject in subjects {
+            classAverages[subject] = 0
+        }
     }
     func addSubject(newSubject: Subject) {
         subjects.append(newSubject)
+        classAverages[newSubject] = 0
     }
     func setStudents(array: [Student]) {
         students = array
@@ -50,11 +58,17 @@ class Classroom: NSObject {
         } else {
             let studentCount = students.count
             var averages = [Subject:Int]() //
+            for subject in subjects {
+                averages[subject] = 0
+            }
             for eachSubject in subjects {
                 for eachStudent in students {
                     let studentPoints:Int = (eachStudent.subjects[eachSubject.name]?.earnedPoints)!
                     let studentTotal:Int =  (eachStudent.subjects[eachSubject.name]?.totalPoints)!
-                    averages[eachSubject] = (averages[eachSubject]!+(studentPoints/studentTotal))/studentCount
+                    if studentTotal != 0 {
+                        let classTotal:Int = (averages[eachSubject]!+(studentPoints/studentTotal))
+                        averages[eachSubject] = classTotal/studentCount
+                    }
                 }
             }
             return averages

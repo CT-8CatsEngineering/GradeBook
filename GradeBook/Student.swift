@@ -24,7 +24,7 @@ class Student:NSObject {
     }
     
     init(name:String, inID:Int, inClass:Classroom) {
-        self.name = name
+        self.name = String.init(name)
         self.id = inID
         self.classroom = inClass
     }
@@ -32,9 +32,18 @@ class Student:NSObject {
     func setSubjects(inSubjectArray:[Subject]) {
         var tempDict = [String:Subject]()
         for inSubject in inSubjectArray {
-            tempDict[inSubject.name] = inSubject
+            tempDict[inSubject.name] = (inSubject.mutableCopy() as! Subject)
         }
         
         subjects = tempDict
     }
+    
+    override func mutableCopy() -> Any {
+        let newStudent:Student = Student.init(name: self.name, inID: self.id, inClass: self.classroom!)
+        let subjectArray = [Subject](self.subjects.values)
+        newStudent.setSubjects(inSubjectArray: subjectArray)
+        return newStudent
+    }
+
+    
 }

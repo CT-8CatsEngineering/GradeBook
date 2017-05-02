@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3BC2EE031E9C19B90037ACA8 /* ClassroomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE021E9C19B80037ACA8 /* ClassroomViewController.swift */; };
+		3BC2EE0C1E9D67CB0037ACA8 /* studentAveragesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE0B1E9D67CB0037ACA8 /* studentAveragesCell.swift */; };
+		3BC2EE0F1EA018380037ACA8 /* CreateAssignmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE0E1EA018380037ACA8 /* CreateAssignmentViewController.swift */; };
+		3BC2EE111EA01ED90037ACA8 /* StudentAssignmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE101EA01ED90037ACA8 /* StudentAssignmentCell.swift */; };
 		533A9EFE1E897D0A0005EE22 /* NewClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */; };
 		533A9F001E8985320005EE22 /* SubjectCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */; };
 		533A9F021E8C16FC0005EE22 /* ClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */; };
@@ -35,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3BC2EE021E9C19B80037ACA8 /* ClassroomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassroomViewController.swift; sourceTree = "<group>"; };
+		3BC2EE0B1E9D67CB0037ACA8 /* studentAveragesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = studentAveragesCell.swift; sourceTree = "<group>"; };
+		3BC2EE0E1EA018380037ACA8 /* CreateAssignmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAssignmentViewController.swift; sourceTree = "<group>"; };
+		3BC2EE101EA01ED90037ACA8 /* StudentAssignmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentAssignmentCell.swift; sourceTree = "<group>"; };
 		533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewClassViewController.swift; sourceTree = "<group>"; };
 		533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubjectCollectionCell.swift; sourceTree = "<group>"; };
 		533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassTableViewCell.swift; sourceTree = "<group>"; };
@@ -74,6 +82,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3BC2EE061E9C22D40037ACA8 /* Class Creation */ = {
+			isa = PBXGroup;
+			children = (
+				533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */,
+				533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */,
+				533A9F031E8C30130005EE22 /* StudentListCell.swift */,
+			);
+			name = "Class Creation";
+			sourceTree = "<group>";
+		};
+		3BC2EE071E9C230D0037ACA8 /* Class List */ = {
+			isa = PBXGroup;
+			children = (
+				53F81FEC1E6A39B3003447D4 /* ViewController.swift */,
+				533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */,
+			);
+			name = "Class List";
+			sourceTree = "<group>";
+		};
+		3BC2EE081E9C23430037ACA8 /* Classroom */ = {
+			isa = PBXGroup;
+			children = (
+				3BC2EE021E9C19B80037ACA8 /* ClassroomViewController.swift */,
+				3BC2EE0B1E9D67CB0037ACA8 /* studentAveragesCell.swift */,
+			);
+			name = Classroom;
+			sourceTree = "<group>";
+		};
+		3BC2EE0D1EA017010037ACA8 /* Create Assignment */ = {
+			isa = PBXGroup;
+			children = (
+				3BC2EE0E1EA018380037ACA8 /* CreateAssignmentViewController.swift */,
+				3BC2EE101EA01ED90037ACA8 /* StudentAssignmentCell.swift */,
+			);
+			name = "Create Assignment";
+			sourceTree = "<group>";
+		};
 		53F81FDE1E6A39B3003447D4 = {
 			isa = PBXGroup;
 			children = (
@@ -97,11 +142,10 @@
 			isa = PBXGroup;
 			children = (
 				53F81FEA1E6A39B3003447D4 /* AppDelegate.swift */,
-				53F81FEC1E6A39B3003447D4 /* ViewController.swift */,
-				533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */,
-				533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */,
-				533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */,
-				533A9F031E8C30130005EE22 /* StudentListCell.swift */,
+				3BC2EE061E9C22D40037ACA8 /* Class Creation */,
+				3BC2EE071E9C230D0037ACA8 /* Class List */,
+				3BC2EE081E9C23430037ACA8 /* Classroom */,
+				3BC2EE0D1EA017010037ACA8 /* Create Assignment */,
 				53F81FEE1E6A39B3003447D4 /* Main.storyboard */,
 				53F8200A1E6A3BE9003447D4 /* Classroom.swift */,
 				53F8200C1E6A3BFE003447D4 /* Subject.swift */,
@@ -231,13 +275,17 @@
 				533A9EFE1E897D0A0005EE22 /* NewClassViewController.swift in Sources */,
 				53F820111E6A3C47003447D4 /* Assignment.swift in Sources */,
 				533A9F001E8985320005EE22 /* SubjectCollectionCell.swift in Sources */,
+				3BC2EE0F1EA018380037ACA8 /* CreateAssignmentViewController.swift in Sources */,
 				533A9F041E8C30130005EE22 /* StudentListCell.swift in Sources */,
+				3BC2EE111EA01ED90037ACA8 /* StudentAssignmentCell.swift in Sources */,
 				53F8200D1E6A3BFE003447D4 /* Subject.swift in Sources */,
 				53F8200B1E6A3BE9003447D4 /* Classroom.swift in Sources */,
+				3BC2EE0C1E9D67CB0037ACA8 /* studentAveragesCell.swift in Sources */,
 				53F81FED1E6A39B3003447D4 /* ViewController.swift in Sources */,
 				53F8200F1E6A3C0F003447D4 /* Student.swift in Sources */,
 				53F81FEB1E6A39B3003447D4 /* AppDelegate.swift in Sources */,
 				533A9F021E8C16FC0005EE22 /* ClassTableViewCell.swift in Sources */,
+				3BC2EE031E9C19B90037ACA8 /* ClassroomViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

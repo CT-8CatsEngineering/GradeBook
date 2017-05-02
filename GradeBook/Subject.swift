@@ -45,9 +45,12 @@ class Subject: NSObject, NSCoding {
     init?(name:String, abr:String, assignments:[Assignment], gradeScale:Int, earnedPoints:Int, totalPoints:Int) {
         super.init()
         
-        self.name = name
-        self.abreviation = abr
-        self.assignments = assignments
+        self.name = String.init(name)
+        self.abreviation = String.init(abr)
+        self.assignments = [Assignment]()
+        for assignment in assignments {
+            self.assignments.append(assignment.copy() as! Assignment)
+        }
         self.gradingScale = gradeScale
         self.earnedPoints = earnedPoints
         self.totalPoints = totalPoints
@@ -82,18 +85,33 @@ class Subject: NSObject, NSCoding {
 
         self.init(name: name, abr: abreviation, assignments: assignments, gradeScale: gradingScale, earnedPoints:earnedPoints, totalPoints:totalPoints)
     }
-    
+        
     func addAssingment(newAssignment: Assignment) {
         self.earnedPoints += newAssignment.grade
         self.totalPoints += newAssignment.totalPoints
         
         self.assignments.append(newAssignment)
     }
+    
     func displayedGrade()->Int {
-        return earnedPoints/totalPoints * gradingScale
+        if totalPoints == 0 {
+            return gradingScale
+        } else {
+            return earnedPoints/totalPoints * gradingScale
+        }
     }
+    
     func subjectDescription()->String {
         let displayedGrade = self.displayedGrade()
         return "\(name) : \(abreviation) Grade: \(displayedGrade)"
+    }
+    
+
+    func displayAssignments() {
+        print("displaying the assignments for this students subjects")
+    }
+    
+    override func mutableCopy() -> Any {
+        return Subject.init(name: self.name, abr: self.abreviation, assignments: self.assignments, gradeScale: self.gradingScale, earnedPoints: self.earnedPoints, totalPoints: self.totalPoints) as Any
     }
 }
