@@ -23,10 +23,10 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         if (classroom != nil) {
-            print("classroom is not nil \(String(describing: classroom?.className))")
+            //print("classroom is not nil \(String(describing: classroom?.className))")
             self.setUpClassAverageStack()
         }
-        print("class average stack views \(classAveragesStack.arrangedSubviews)")
+        //print("class average stack views \(classAveragesStack.arrangedSubviews)")
         studentTableView.reloadData()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -104,8 +104,8 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
                 for subview in labelSubviews {
                     let labelSubview = subview as! UILabel
                     if labelSubview.accessibilityIdentifier == "averageLabel" {
-                        var averageGradeString:String = "\(subject!.displayedGrade())"
-                        if averageGradeString == "100" {
+                        var averageGradeString:String = "\(classroom?.classAverages[subject!] ?? 0)"
+                        if averageGradeString == "0" {
                             averageGradeString = "N/A"
                         }
                         
@@ -124,9 +124,13 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
         //if let sourceViewController = sender.source as? NewClassViewController, let newClass = sourceViewController.newClass
         if sender.identifier == "saveNewAssignmentSegue" {
             if let newAssignmentView = sender.source as? CreateAssignmentViewController {
+                if newAssignmentView.currentTextField != nil {
+                    newAssignmentView.assignGrade(newAssignmentView.currentTextField!)
+                }
                 classroom?.setStudents(array: newAssignmentView.students)
-                studentTableView.reloadData()
                 self.updateClassAverageStack()
+                studentTableView.reloadData()
+                classroom?.saveClassroom()
             }
         }
         print("unwinding from creating an assignment")

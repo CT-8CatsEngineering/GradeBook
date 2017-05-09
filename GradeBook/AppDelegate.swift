@@ -41,6 +41,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func classroomSaveFilePath()->URL {
+        let fileManager = FileManager.default
+        let dirs = fileManager.urls(for: .documentDirectory, in: .userDomainMask).last
+        var filename = dirs
+        filename?.appendPathComponent("classrooms")
+        if !fileManager.fileExists(atPath: (filename?.path)!) {
+            do {
+                try fileManager.createDirectory(at: filename!, withIntermediateDirectories: true, attributes: nil)
+                let dirExists:Bool = fileManager.fileExists(atPath: (filename?.path)!)
+                print("dir Exists: \(dirExists)")
+            } catch {
+                print("failed to create the classroom Directory")
+            }
+        }
+        return filename!
+    }
+    
 }
 

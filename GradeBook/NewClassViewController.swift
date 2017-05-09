@@ -77,13 +77,14 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         guard let button = sender as? UIBarButtonItem, button === saveButton else {
             self.newClass = Classroom.init(name: classNameField.text!)
             
-            let studentObj = loadStudents(inClassroom: self.newClass!)
+            let studentObj = loadStudents()
             
             self.newClass!.setSubjects(array: selectedSubjects)
             self.newClass!.setStudents(array: studentObj)
             for subject in selectedSubjects {
                 self.newClass!.classAverages[subject] = subject.gradingScale //default class average to the gradescale
             }
+            newClass?.saveClassroom()
             
             return
         }
@@ -99,25 +100,28 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         //also look into implementing UIDocumentPickerViewController later and UIDocumentInteractionController
         let fileManager = FileManager.default
         let dirs = fileManager.urls(for: .documentDirectory, in: .userDomainMask).last
-        var filename = dirs
+        var filename:URL = dirs!
+        filename.appendPathComponent("StudentLists")
+        let studentListDirectory = filename
         let nameString = "Joe Smith,Ann Lin,Zack Smith,Beth Lin,Laura Smith,Larry Lin,Ben Smith,Mary Lin"
         let nameString2 = "Bob Dylan,Jeff Morrison,Zack Taylor,Kelsey Gram,Lindsey Lohan,Kattie Perry"
         do {
-            filename?.appendPathComponent("testFile.rtf")
-            let filename2 = dirs?.appendingPathComponent("testFile2.rft")
-            if !fileManager.fileExists(atPath: (filename?.absoluteString)!) {
-                try nameString.write(to: filename!, atomically: false, encoding: String.Encoding.utf8)
+            if !fileManager.fileExists(atPath: filename.absoluteString) {
+                try fileManager.createDirectory(at: filename, withIntermediateDirectories: true, attributes: nil)
             }
-            if !fileManager.fileExists(atPath: (filename2?.absoluteString)!) {
-                try nameString2.write(to: filename2!, atomically: false, encoding: String.Encoding.utf8)
+            let filename2 = filename.appendingPathComponent("testFile2.rft")
+            filename.appendPathComponent("testFile.rtf")
+            if !fileManager.fileExists(atPath: filename.absoluteString) {
+                try nameString.write(to: filename, atomically: false, encoding: String.Encoding.utf8)
             }
-            let dirsPath = (dirs?.path)!
+            if !fileManager.fileExists(atPath: filename2.absoluteString) {
+                try nameString2.write(to: filename2, atomically: false, encoding: String.Encoding.utf8)
+            }
+            let dirsPath = (studentListDirectory.path)
             let contents = fileManager.subpaths(atPath:dirsPath )
 
-            print("starting path \(dirs!)")
-            print("contents of dir: \(contents!)")
             for pathString in contents! {
-                filenames.append((dirs?.appendingPathComponent(pathString).absoluteString)!)
+                filenames.append(studentListDirectory.appendingPathComponent(pathString).absoluteString)
             }
         } catch {
             print("failed to write to file or get contents")
@@ -147,12 +151,12 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         
     }
     
-    func loadStudents(inClassroom:Classroom)->[Student] {
+    func loadStudents()->[Student] {
         var studentObjects = [Student]()
         
         for nameString in students {
             parentView?.lastStudentID += 1
-            let newStudent = Student.init(name: nameString, inID: (parentView?.lastStudentID)!, inClass: inClassroom)
+            let newStudent = Student.init(name: nameString, inID: (parentView?.lastStudentID)!)
             newStudent.setSubjects(inSubjectArray: selectedSubjects)
             studentObjects.append(newStudent)
         }

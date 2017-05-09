@@ -37,12 +37,8 @@ class studentAveragesCell: UITableViewCell {
             
             let classSubjectAverageLabel = UILabel.init()
             classSubjectAverageLabel.accessibilityIdentifier = "averageLabel"
-            var averageGradeString:String = "\(subject.displayedGrade())"
-            if averageGradeString == "100" {
-                averageGradeString = "N/A"
-            }
             
-            classSubjectAverageLabel.text = averageGradeString
+            classSubjectAverageLabel.text = "\(subject.displayedGrade())"
             classSubjectAverageLabel.textAlignment = NSTextAlignment.center
             subjectView.addArrangedSubview(classSubjectAverageLabel)
             

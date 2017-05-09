@@ -488,7 +488,10 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                                                             <connections>
+                                                                <action selector="assignGrade:" destination="MAF-Rk-QSk" eventType="editingDidEndOnExit" id="gsT-oh-NXh"/>
+                                                                <action selector="assignGrade:" destination="MAF-Rk-QSk" eventType="primaryActionTriggered" id="m32-mf-TXl"/>
                                                                 <action selector="assignGrade:" destination="MAF-Rk-QSk" eventType="editingDidEnd" id="oCr-fM-WxF"/>
+                                                                <action selector="beginGradeChange:" destination="MAF-Rk-QSk" eventType="editingDidBegin" id="XJm-4k-dWS"/>
                                                             </connections>
                                                         </textField>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fdX-0O-TIt">
@@ -555,7 +558,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="ffn-UN-mrg">
                             <connections>
-                                <segue destination="wRg-jd-E6L" kind="unwind" identifier="saveNewAssignmentSegue" unwindAction="unwindToClassroomWithSender:" id="IiS-K1-Ro8"/>
+                                <segue destination="wRg-jd-E6L" kind="unwind" identifier="saveNewAssignmentSegue" unwindAction="unwindToClassroomWithSender:" id="paT-35-sKR"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

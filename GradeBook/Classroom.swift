@@ -7,15 +7,24 @@
 //
 
 import Foundation
+import UIKit
 
-class Classroom: NSObject {
+class Classroom: NSObject, NSCoding {
 //MARK: properties
     var className:String = ""
     var subjects = [Subject]() //used as the basis for each students subject array
     var students = [Student]()
     var classAverages:Dictionary = [Subject: Int]()
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    
+    //MARK: types
+    struct PropertyKey {
+        static let classname = "className"
+        static let subjects = "subjects"
+        static let students = "students"
+        static let classAverages = "classAverages"
+    }
+
 //MARK: Functions
     init(name:String) {
         super.init()
@@ -56,23 +65,56 @@ class Classroom: NSObject {
             }
             return emptyAverages
         } else {
-            let studentCount = students.count
+            let studentCount = Float(students.count)
+            var classTotal:Float = 0
             var averages = [Subject:Int]() //
             for subject in subjects {
                 averages[subject] = 0
             }
             for eachSubject in subjects {
+                classTotal = 0
                 for eachStudent in students {
-                    let studentPoints:Int = (eachStudent.subjects[eachSubject.name]?.earnedPoints)!
-                    let studentTotal:Int =  (eachStudent.subjects[eachSubject.name]?.totalPoints)!
+                    let studentPoints:Float = Float((eachStudent.subjects[eachSubject.name]?.earnedPoints)!)
+                    let studentTotal:Float =  Float((eachStudent.subjects[eachSubject.name]?.totalPoints)!)
                     if studentTotal != 0 {
-                        let classTotal:Int = (averages[eachSubject]!+(studentPoints/studentTotal))
-                        averages[eachSubject] = classTotal/studentCount
+                        classTotal = (classTotal + (studentPoints.divided(by: studentTotal)))
                     }
                 }
+                averages[eachSubject] = Int((classTotal/studentCount)*Float(eachSubject.gradingScale))
             }
             return averages
         }
     }
+    func saveClassroom() {
+        let fileManager = FileManager.default
+        var saveFile:URL =  appDelegate.classroomSaveFilePath()
+        let dirPathExists:Bool = fileManager.fileExists(atPath: saveFile.path)
+        saveFile.appendPathComponent(self.className)
+        let filePath = saveFile.path
+        let filePathExists:Bool = fileManager.fileExists(atPath: filePath)
+        //let data = NSKeyedArchiver.archivedData(withRootObject: self)
+        //   let success = data.writ
+        print("dir path:\(dirPathExists), filePathExists: \(filePathExists) filePath:\(filePath)")
+        let success = NSKeyedArchiver.archiveRootObject(self, toFile: filePath)
+        if !success {
+            print("failed to save the class to file.")
+        }
+    }
     
+    
+    //MARK: Coding functions
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(className, forKey: PropertyKey.classname)
+        aCoder.encode(subjects, forKey: PropertyKey.subjects)
+        aCoder.encode(students, forKey: PropertyKey.students)
+        //aCoder.encode(classAverages, forKey: PropertyKey.classAverages)
+    }
+    
+    required convenience init?(coder aDecoder:NSCoder) {
+        self.init(name: aDecoder.decodeObject(forKey: PropertyKey.classname) as! String)
+        self.setSubjects(array: aDecoder.decodeObject(forKey: PropertyKey.subjects) as! [Subject])
+        self.setStudents(array: aDecoder.decodeObject(forKey: PropertyKey.students) as! [Student])
+        
+        classAverages = self.recalculateWholeClassAverages()
+    }
 }

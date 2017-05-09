@@ -14,7 +14,7 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
     var classSubjects = [Subject]()
     var students = [Student]()//each item is copied and should be separate from the actual list in the classroom
     var studentScores = [String: Int]()
-    var selectedSubject:Subject?
+    var selectedSubject:Subject? = nil
     
     @IBOutlet weak var subjectPicker: UIPickerView!
     @IBOutlet weak var assignmentName: UITextField!
@@ -24,9 +24,19 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
     @IBOutlet weak var subjectSelectionView: UIView!
     @IBOutlet weak var SubjectDisplay: UITextField!
     
+    var currentTextField:UITextField?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gradesView.isHidden = true
+        selectedSubject = self.selectedSubjectOnPickerView()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        self.view.endEditing(false)
+        super.viewWillDisappear(animated)
+    }
+    @IBAction func beginGradeChange(_ sender: Any) {
+        currentTextField = (sender as! UITextField)
     }
     @IBAction func editGrades(_ sender: Any) {
         subjectSelectionView.isHidden = true
@@ -36,15 +46,18 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         SubjectDisplay.text = selectedSubjectOnPickerView().name
         SubjectDisplay.isEnabled = false
         
+        studentTable.reloadData()
     }
     @IBAction func assignGrade(_ sender: Any) {
         let textField = sender as! UITextField
         let currentAssignmentCell:StudentAssignmentCell = textField.superview?.superview as! StudentAssignmentCell
-        let currentStudent  = currentAssignmentCell.studentObj
+        let currentStudent:Student  = currentAssignmentCell.studentObj!
         
-        let studentSubject = currentStudent?.subjects[(selectedSubject?.name)!]
-        let newAssignment = Assignment.init(title: assignmentName.text!, subject: studentSubject!, grade: Int(currentAssignmentCell.gradeField.text!)!, totalPoints: Int(assignmentTotalPoints.text!)!)
+        let studentSubject = currentStudent.subjects[(selectedSubject?.name)!]
+        let newAssignment = Assignment.init(title: assignmentName.text!, grade: Int(currentAssignmentCell.gradeField.text!)!, totalPoints: Int(assignmentTotalPoints.text!)!)
         studentSubject?.addAssingment(newAssignment: newAssignment)
+        
+        currentTextField = nil
     }
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         let isPresentingInAddMode = presentingViewController is UINavigationController
@@ -62,11 +75,8 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         
         cell.assignmentStudentName.text = students[indexPath.last!].name
         cell.studentObj = students[indexPath.last!]
-        if assignmentTotalPoints.text != "" {
-            cell.totalPoints.text = assignmentTotalPoints.text
-        } else {
-            cell.totalPoints.text = "/total"
-        }
+        cell.totalPoints.text = "/\(assignmentTotalPoints.text ?? "total")"
+        
         return cell
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

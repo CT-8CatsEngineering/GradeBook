@@ -14,12 +14,14 @@ class ViewController: UIViewController, UITableViewDataSource {
     var classes = [Classroom]()
     var subjects = [Subject]()
     var lastStudentID:Int = 0
+    var classFiles = [String]()
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         subjects = self.defaultSubjects()
+        checkLoadedClassroomFiles()
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,6 +47,53 @@ class ViewController: UIViewController, UITableViewDataSource {
         defaultSubjects.append(wordStudies)
         
         return defaultSubjects
+    }
+    func loadClassRoomFromFile(path:String) -> Classroom {
+        let classroom = NSKeyedUnarchiver.unarchiveObject(withFile: path)
+        
+        if classroom == nil {
+            fatalError("failed to unarchive the file into a classroom")
+        }
+        
+        return classroom as! Classroom
+    }
+
+    func checkLoadedClassroomFiles() {
+        let saveFile:URL =  appDelegate.classroomSaveFilePath()
+        let fileManager = FileManager.default
+        do {
+            let files = try fileManager.contentsOfDirectory(atPath: saveFile.path)
+            for path in files{
+                let filePath = saveFile.appendingPathComponent(path)
+                if !classFiles.contains(filePath.path) {
+                    let newClass = loadClassRoomFromFile(path: filePath.path)
+                    if classes.contains(newClass) { //somehow the class is in the list but the file path is not. update the file path array
+                        classFiles.append(filePath.path)
+                    } else { //this is a new class file, load the data and add the class and path to the arrays.
+                        classes.append(newClass)
+                        classFiles.append(filePath.path)
+                    }
+                }
+            }
+            reloadTableContents()
+
+        } catch {
+            print("failed to get the contents of the classroom Directory")
+        }
+    }
+    func deleteClassroom(atIndex:Int) {
+        let tmpClass = classes[atIndex]
+        classes.remove(at: atIndex)
+        var saveFile:URL =  appDelegate.classroomSaveFilePath()
+        saveFile.appendPathComponent(tmpClass.className)
+        let fileManager = FileManager.default
+        if !fileManager.fileExists(atPath: saveFile.path) {
+            do {
+                try fileManager.removeItem(at: saveFile)
+            } catch {
+                print("failed to remove the classroom file")
+            }
+}
     }
     func reloadTableContents() {
         classesTable.reloadData()
@@ -96,6 +145,19 @@ class ViewController: UIViewController, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return classes.count
     }
-    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            self.deleteClassroom(atIndex: indexPath.last!)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+            //CT Not going to currently be used.
+        }
+    }
 }
 

@@ -49,7 +49,7 @@ class Subject: NSObject, NSCoding {
         self.abreviation = String.init(abr)
         self.assignments = [Assignment]()
         for assignment in assignments {
-            self.assignments.append(assignment.copy() as! Assignment)
+            self.assignments.append(assignment.mutableCopy() as! Assignment)
         }
         self.gradingScale = gradeScale
         self.earnedPoints = earnedPoints
@@ -97,7 +97,9 @@ class Subject: NSObject, NSCoding {
         if totalPoints == 0 {
             return gradingScale
         } else {
-            return earnedPoints/totalPoints * gradingScale
+            let floatEarnedPoints:Float = Float(earnedPoints)
+            let floatTotalPoints:Float = Float(totalPoints)
+            return Int(floatEarnedPoints/floatTotalPoints * Float(gradingScale))
         }
     }
     
