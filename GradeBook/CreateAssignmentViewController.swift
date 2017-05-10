@@ -30,6 +30,7 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         super.viewDidLoad()
         gradesView.isHidden = true
         selectedSubject = self.selectedSubjectOnPickerView()
+        studentTable.reloadData()
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.view.endEditing(false)

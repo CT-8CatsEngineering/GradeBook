@@ -48,6 +48,15 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
                         
         }else if segue.identifier == "viewStudentDetailsSegue" {
             print("going to the student details panel")
+            let navControl = segue.destination as? UINavigationController
+            //let newAssignmentController = segue.destination as! CreateAssignmentViewController
+            guard let reviewAssignmentController = navControl?.topViewController as? AssignmentReviewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            let indexPath = studentTableView.indexPathForSelectedRow
+            let currentStudent:Student = (classroom?.students[(indexPath?.last!)!])!
+            reviewAssignmentController.currentStudent = currentStudent
+
         } else {
             print("neither the assignment button nor the student detail was pressed, going back to the list of classes")
         }

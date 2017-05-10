@@ -13,6 +13,7 @@ class Student:NSObject, NSCoding {
     var name:String
     var id:Int
     var subjects = [String:Subject]()//[subject.name:subject]  allows us to directly access each subject by its name which allows for coresponding between the students.subject and Classroom.subjects
+    var subjectsArray = [Subject]()
     //weak var classroom:Classroom?
     
     //MARK: types
@@ -41,15 +42,14 @@ class Student:NSObject, NSCoding {
         for inSubject in inSubjectArray {
             tempDict[inSubject.name] = (inSubject.mutableCopy() as! Subject)
         }
-        
+        subjectsArray = inSubjectArray
         subjects = tempDict
     }
     
     override func mutableCopy() -> Any {
         let newStudent:Student = Student.init(name: self.name, inID: self.id)
-        let subjectArray = [Subject](self.subjects.values)
         var copySubjectArray = [Subject]()
-        for subject in subjectArray {
+        for subject in subjectsArray {
             copySubjectArray.append(subject.mutableCopy() as! Subject)
         }
         newStudent.setSubjects(inSubjectArray: copySubjectArray)
@@ -59,7 +59,7 @@ class Student:NSObject, NSCoding {
     func encode(with aCoder: NSCoder) {
         aCoder.encode(name, forKey: PropertyKey.name)
         aCoder.encode(id, forKey: PropertyKey.id)
-        aCoder.encode(Array(subjects.values), forKey: PropertyKey.subjects)
+        aCoder.encode(subjectsArray, forKey: PropertyKey.subjects)
         
     }
     

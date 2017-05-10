@@ -87,7 +87,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         var saveFile:URL =  appDelegate.classroomSaveFilePath()
         saveFile.appendPathComponent(tmpClass.className)
         let fileManager = FileManager.default
-        if !fileManager.fileExists(atPath: saveFile.path) {
+        if fileManager.fileExists(atPath: saveFile.path) {
             do {
                 try fileManager.removeItem(at: saveFile)
             } catch {

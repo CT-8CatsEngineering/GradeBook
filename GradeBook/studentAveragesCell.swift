@@ -48,7 +48,6 @@ class studentAveragesCell: UITableViewCell {
     
         averagesStack.distribution = UIStackViewDistribution.fillEqually
         averagesStack.setNeedsDisplay()
-        print("average stack views \(averagesStack.arrangedSubviews)")
     }
     func updateAveragesStack(with student:Student) {
         let averagesSubviews = averagesStack.subviews

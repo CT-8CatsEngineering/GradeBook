@@ -580,7 +580,7 @@
         <!--Student-->
         <scene sceneID="6dN-1O-vsX">
             <objects>
-                <viewController id="RbM-Aq-2CQ" sceneMemberID="viewController">
+                <viewController id="RbM-Aq-2CQ" customClass="AssignmentReviewController" customModule="GradeBook" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="02f-yH-SUJ"/>
                         <viewControllerLayoutGuide type="bottom" id="1X3-Lk-AVW"/>
@@ -588,6 +588,47 @@
                     <view key="view" contentMode="scaleToFill" id="5H0-Wj-dpD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mvJ-Fp-i6W">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AssignmentReviewCell" id="LyP-KL-Cxy" customClass="ReviewAssignmentCell" customModule="GradeBook" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LyP-KL-Cxy" id="vyf-Mn-1cR">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Assignment Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vQT-35-hMS">
+                                                    <rect key="frame" x="19" y="12" width="180" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Grade/totalPoints" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSP-gy-sce">
+                                                    <rect key="frame" x="256" y="11" width="111" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="AssignmentName" destination="vQT-35-hMS" id="6TP-hX-xyi"/>
+                                            <outlet property="GradeLabel" destination="rSP-gy-sce" id="av0-eH-qRj"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="RbM-Aq-2CQ" id="MFc-1q-fSG"/>
+                                    <outlet property="delegate" destination="RbM-Aq-2CQ" id="6NX-fW-wnV"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Student" id="JDV-t5-wBd">
@@ -597,11 +638,15 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="NavigationItem" destination="JDV-t5-wBd" id="CL5-Te-ys4"/>
+                        <outlet property="assignmentTable" destination="mvJ-Fp-i6W" id="3To-bP-7Cq"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1GY-2l-gDL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="gJZ-8p-B7t" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="5353" y="716"/>
+            <point key="canvasLocation" x="5352.8000000000002" y="715.59220389805103"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="iLp-AS-e3U">
