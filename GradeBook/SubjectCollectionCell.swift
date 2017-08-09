@@ -14,7 +14,7 @@ class subjectCell: UICollectionViewCell {
     @IBOutlet weak var SubjectScale: UILabel!
     @IBOutlet weak var SubjectName: UILabel!
     
-    weak var subjectObject:Subject? = nil
+    weak var subjectObject:SubjectTemplateMO? = nil
     
     func setSelected(inBool: Bool) {
         if inBool {

@@ -14,7 +14,7 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var assignmentButton: UIBarButtonItem!
     @IBOutlet weak var classListButton: UIBarButtonItem!
     @IBOutlet weak var classAveragesStack: UIStackView!
-    var classroom:Classroom?
+    var classroom:ClassroomMO?
     var lastAssignmentID:Int = 0
     
     @IBOutlet weak var studentTableView: UITableView!
@@ -39,12 +39,8 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
             guard let newAssignmentController = navControl?.topViewController as? CreateAssignmentViewController else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
-            var tempStudents = [Student]()
-            for newstudent in (classroom?.students)! {
-                tempStudents.append(newstudent.mutableCopy() as! Student)
-            }
-            newAssignmentController.students = tempStudents
-            newAssignmentController.classSubjects = (classroom?.subjects)!
+            newAssignmentController.students = (classroom?.students)!.array as! [StudentMO]
+            newAssignmentController.classSubjects = (classroom?.subjects)!.array as! [SubjectMO]
                         
         }else if segue.identifier == "viewStudentDetailsSegue" {
             print("going to the student details panel")
@@ -54,7 +50,7 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
                 fatalError("Unexpected destination: \(segue.destination)")
             }
             let indexPath = studentTableView.indexPathForSelectedRow
-            let currentStudent:Student = (classroom?.students[(indexPath?.last!)!])!
+            let currentStudent:StudentMO = (classroom?.students![(indexPath?.last!)!])! as! StudentMO
             reviewAssignmentController.currentStudent = currentStudent
 
         } else {
@@ -65,20 +61,20 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
     func setUpClassAverageStack() {
         let x = 0
         let height:Int = Int(classAveragesStack.frame.height)
-        let count:CGFloat = CGFloat((classroom?.subjects.count)!)
+        let count:CGFloat = CGFloat((classroom?.subjects!.count)!)
         let width:Int = Int(classAveragesStack.frame.width/count)
         
-        for (subject, score) in (classroom?.classAverages)! {
+        for (subject, score) in (classroom?.calculateWholeClassAverages())! {
             
             let frame = CGRect(x: x, y: 0, width: width, height: height)
             let subjectView:UIStackView = UIStackView.init(frame: frame)
-            subjectView.accessibilityIdentifier = "\(subject.name)"
+            subjectView.accessibilityIdentifier = "\(subject.name ?? "")"
             subjectView.axis = UILayoutConstraintAxis.vertical
             subjectView.backgroundColor = UIColor.lightGray
             
             let abreviationLabel = UILabel.init()
             abreviationLabel.accessibilityIdentifier = "abreviationLabel"
-            abreviationLabel.text = subject.abreviation
+            abreviationLabel.text = subject.abbreviation
             abreviationLabel.textAlignment = NSTextAlignment.center
             subjectView.addArrangedSubview(abreviationLabel)
             
@@ -96,13 +92,13 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
 
     }
     func updateClassAverageStack() {
-        classroom?.classAverages = (classroom?.recalculateWholeClassAverages())!
+        let classAverages = (classroom?.calculateWholeClassAverages())!
         
         let averagesSubviews = classAveragesStack.subviews
         
         for view in averagesSubviews {
-            var subject:Subject? = nil
-            for (testSubject, _) in (classroom?.classAverages)! {
+            var subject:SubjectMO? = nil
+            for (testSubject, _) in classAverages {
                 if testSubject.name == view.accessibilityIdentifier! {
                     subject = testSubject
                 }
@@ -113,7 +109,7 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
                 for subview in labelSubviews {
                     let labelSubview = subview as! UILabel
                     if labelSubview.accessibilityIdentifier == "averageLabel" {
-                        var averageGradeString:String = "\(classroom?.classAverages[subject!] ?? 0)"
+                        var averageGradeString:String = "\(classAverages[subject!] ?? 0)"
                         if averageGradeString == "0" {
                             averageGradeString = "N/A"
                         }
@@ -132,15 +128,8 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
         //save changes
         //if let sourceViewController = sender.source as? NewClassViewController, let newClass = sourceViewController.newClass
         if sender.identifier == "saveNewAssignmentSegue" {
-            if let newAssignmentView = sender.source as? CreateAssignmentViewController {
-                if newAssignmentView.currentTextField != nil {
-                    newAssignmentView.assignGrade(newAssignmentView.currentTextField!)
-                }
-                classroom?.setStudents(array: newAssignmentView.students)
-                self.updateClassAverageStack()
-                studentTableView.reloadData()
-                classroom?.saveClassroom()
-            }
+            self.updateClassAverageStack()
+            studentTableView.reloadData()
         }
         print("unwinding from creating an assignment")
         //and save
@@ -151,18 +140,18 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:studentAveragesCell = tableView.dequeueReusableCell(withIdentifier: "StudentWithAverage") as! studentAveragesCell
         
-        cell.studentNameField.text = "\((classroom?.students[indexPath.last!].name)!)"
+        cell.studentNameField.text = "\(((classroom?.students?[indexPath.last!] as! StudentMO).name)!)"
         if cell.averagesStack.subviews.count == 0 {
-            cell.populateAveragesStack(with: (classroom?.students[indexPath.last!])!)
+            cell.populateAveragesStack(with: (classroom?.students![indexPath.last!])! as! StudentMO)
         } else {
-            cell.updateAveragesStack(with: (classroom?.students[indexPath.last!])!)
+            cell.updateAveragesStack(with: (classroom?.students![indexPath.last!])! as! StudentMO)
         }
         return cell
 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (classroom?.students.count)!
+        return (classroom?.students!.count)!
     }
 
 }

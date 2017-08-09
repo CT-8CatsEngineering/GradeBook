@@ -8,37 +8,38 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class studentAveragesCell: UITableViewCell {
   
     @IBOutlet weak var averagesStack: UIStackView!
     @IBOutlet weak var studentNameField: UITextView!
 
-    func populateAveragesStack(with student:Student) {
+    func populateAveragesStack(with student:StudentMO) {
         
         let x = 0
         let height:Int = Int(averagesStack.frame.height)
-        let count:CGFloat = CGFloat(student.subjects.count)
+        let count:CGFloat = CGFloat(student.classroom!.subjects!.count)
         let width:Int = Int(averagesStack.frame.width/count)
         
-        for (_, subject) in student.subjects {
+        for subject in (student.classroom?.subjects)! {
             
             let frame = CGRect(x: x, y: 0, width: width, height: height)
             let subjectView:UIStackView = UIStackView.init(frame: frame)
-            subjectView.accessibilityIdentifier = "\(subject.name)"
+            subjectView.accessibilityIdentifier = "\((subject as! SubjectMO).name ?? "")"
             subjectView.axis = UILayoutConstraintAxis.vertical
             subjectView.backgroundColor = UIColor.lightGray
             
             let abreviationLabel = UILabel.init()
             abreviationLabel.accessibilityIdentifier = "abreviationLabel"
-            abreviationLabel.text = subject.abreviation
+            abreviationLabel.text = (subject as! SubjectMO).abbreviation
             abreviationLabel.textAlignment = NSTextAlignment.center
             subjectView.addArrangedSubview(abreviationLabel)
             
             let classSubjectAverageLabel = UILabel.init()
             classSubjectAverageLabel.accessibilityIdentifier = "averageLabel"
             
-            classSubjectAverageLabel.text = "\(subject.displayedGrade())"
+            classSubjectAverageLabel.text = "\((subject as! SubjectMO).displayedGrade())"
             classSubjectAverageLabel.textAlignment = NSTextAlignment.center
             subjectView.addArrangedSubview(classSubjectAverageLabel)
             
@@ -49,11 +50,33 @@ class studentAveragesCell: UITableViewCell {
         averagesStack.distribution = UIStackViewDistribution.fillEqually
         averagesStack.setNeedsDisplay()
     }
-    func updateAveragesStack(with student:Student) {
+    func updateAveragesStack(with student:StudentMO) {
         let averagesSubviews = averagesStack.subviews
         
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+
         for view in averagesSubviews {
-            let subject = student.subjects[view.accessibilityIdentifier!]
+            
+            let subjectfetchRequest = NSFetchRequest<SubjectMO>(entityName: "SubjectMO")
+            subjectfetchRequest.predicate = NSPredicate(format: "name == %@ AND classroom == %@", view.accessibilityIdentifier!, student.classroom!)
+            var fetchedSubjects:[SubjectMO] = [SubjectMO]()
+            do {
+                fetchedSubjects = try managedContext.fetch(subjectfetchRequest)
+            } catch {
+                fatalError("Failed to fetch Subjects: \(error)")
+            }
+            var subject:SubjectMO? = nil
+            if fetchedSubjects.count == 1 {
+                subject = fetchedSubjects[0]
+            } else {
+                print("this should not happen there should only be one matching subject for a classroom")
+                subject = fetchedSubjects[0]
+            }
+            
             let labelSubviews = view.subviews
             for subview in labelSubviews {
                 let labelSubview = subview as! UILabel

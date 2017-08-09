@@ -14,5 +14,5 @@ class StudentAssignmentCell: UITableViewCell {
     @IBOutlet weak var assignmentStudentName: UILabel!
     @IBOutlet weak var totalPoints: UILabel!
     
-    weak var studentObj:Student?
+    weak var studentObj:StudentMO?
 }

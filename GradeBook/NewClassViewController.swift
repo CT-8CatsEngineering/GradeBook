@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class NewClassViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource  {
     @IBOutlet weak var studentListView: UITableView!
@@ -17,10 +18,10 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
     @IBOutlet weak var ImportView: UIView!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     @IBOutlet weak var saveButton: UIBarButtonItem!
-    var selectedSubjects = [Subject]()
+    var selectedSubjects:NSMutableOrderedSet = NSMutableOrderedSet.init()
     var parentView: ViewController?
     var students = [String]()
-    var newClass:Classroom?
+    var newClass:ClassroomMO?
     var filenames = [String]()
     
     override func viewDidLoad() {
@@ -74,17 +75,34 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         print("preparing for segue")
         super.prepare(for: segue, sender: sender)
         
+        //this may be backwards need to look more closely when I finish the core data conversion.
         guard let button = sender as? UIBarButtonItem, button === saveButton else {
-            self.newClass = Classroom.init(name: classNameField.text!)
             
-            let studentObj = loadStudents()
-            
-            self.newClass!.setSubjects(array: selectedSubjects)
-            self.newClass!.setStudents(array: studentObj)
-            for subject in selectedSubjects {
-                self.newClass!.classAverages[subject] = subject.gradingScale //default class average to the gradescale
+            guard let appDelegate =
+                UIApplication.shared.delegate as? AppDelegate else {
+                    return
             }
-            newClass?.saveClassroom()
+            
+            let managedContext =
+                appDelegate.persistentContainer.viewContext
+            
+            let entity = NSEntityDescription.entity(forEntityName: "ClassroomMO", in: managedContext)!
+            
+            self.newClass = NSManagedObject(entity: entity, insertInto: managedContext) as? ClassroomMO
+
+            self.newClass?.name = classNameField.text
+            let studentObj:[StudentMO] = loadStudents()
+            
+            self.newClass!.subjects = self.createSubjectsFromSelectedTemplates()
+            self.newClass!.students = NSOrderedSet.init(array: studentObj)
+
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Could not save. \(error), \(error.userInfo)")
+                managedContext.rollback()
+            }
+
             
             return
         }
@@ -92,6 +110,35 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
        
         
     }
+    func createSubjectsFromSelectedTemplates() ->NSOrderedSet {
+        var subjects = [SubjectMO]()
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return NSOrderedSet.init()
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "SubjectMO", in: managedContext)!
+        
+
+        
+        for subjectTemplate in selectedSubjects {
+            let newSubject:SubjectMO = NSManagedObject(entity: entity, insertInto: managedContext) as! SubjectMO
+            
+            newSubject.name = (subjectTemplate as! SubjectTemplateMO).name
+            newSubject.abbreviation = (subjectTemplate as! SubjectTemplateMO).abbreviation
+            newSubject.gradeScale = (subjectTemplate as! SubjectTemplateMO).gradeScale
+            newSubject.classroom = self.newClass
+            
+            subjects.append(newSubject)
+        }
+        
+        return NSOrderedSet.init(array: subjects)
+    }
+    
     //so that we can actually update the data in the array of student names when they are edited.
     func updateStudentName(inName:String, position:Int){
         students[position]=inName
@@ -151,13 +198,31 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         
     }
     
-    func loadStudents()->[Student] {
-        var studentObjects = [Student]()
+    func loadStudents()->[StudentMO] {
+        var studentObjects = [StudentMO]()
         
         for nameString in students {
             parentView?.lastStudentID += 1
-            let newStudent = Student.init(name: nameString, inID: (parentView?.lastStudentID)!)
-            newStudent.setSubjects(inSubjectArray: selectedSubjects)
+            
+            guard let appDelegate =
+                UIApplication.shared.delegate as? AppDelegate else {
+                    return studentObjects
+            }
+            
+            let managedContext =
+                appDelegate.persistentContainer.viewContext
+            
+            let entity =
+                NSEntityDescription.entity(forEntityName: "StudentMO",
+                                           in: managedContext)!
+            
+            let newStudent:StudentMO = NSManagedObject(entity: entity,
+                                                            insertInto: managedContext) as! StudentMO
+            
+            newStudent.name = nameString
+            newStudent.id = "\((parentView?.lastStudentID)!)"
+            newStudent.classroom = self.newClass         //setValue(self.newClass, forKey: "classroom")
+            //let newStudent = Student.init(name: nameString, inID: (parentView?.lastStudentID)!)
             studentObjects.append(newStudent)
         }
         return studentObjects
@@ -174,7 +239,7 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         let cell:subjectCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ClassCreationSubject", for: indexPath) as! subjectCell
 
         cell.SubjectName.text = parentView!.subjects[indexPath.last!].name
-        cell.SubjectScale.text = "\(parentView!.subjects[indexPath.last!].gradingScale)"
+        cell.SubjectScale.text = "\(parentView!.subjects[indexPath.last!].gradeScale)"
         cell.subjectObject = parentView!.subjects[indexPath.last!]
         
         return cell
@@ -187,11 +252,10 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
         let cell:subjectCell = collectionView.cellForItem(at: indexPath) as! subjectCell
         
         if (selectedSubjects.contains(cell.subjectObject!)) {
-            let subjectIndex:Int = selectedSubjects.index(of: cell.subjectObject!)!
-            selectedSubjects.remove(at: subjectIndex)
+            selectedSubjects.remove(cell.subjectObject!)
             cell.setSelected(inBool: false)
         } else {
-            selectedSubjects.append(cell.subjectObject!)
+            selectedSubjects.add(cell.subjectObject!)
             cell.setSelected(inBool: true)
         }
         

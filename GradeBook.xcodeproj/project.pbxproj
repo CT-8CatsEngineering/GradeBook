@@ -7,12 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B355EDF1F394222006D8220 /* SubjectTemplateMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B355EDD1F394222006D8220 /* SubjectTemplateMO+CoreDataClass.swift */; };
+		3B355EE01F394222006D8220 /* SubjectTemplateMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B355EDE1F394222006D8220 /* SubjectTemplateMO+CoreDataProperties.swift */; };
+		3B355EE21F3B34A1006D8220 /* SubjectPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B355EE11F3B34A1006D8220 /* SubjectPickerView.swift */; };
 		3B82DED91EC21AA90003F0D7 /* AssignmentReviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B82DED81EC21AA90003F0D7 /* AssignmentReviewController.swift */; };
 		3B82DEDB1EC21AC90003F0D7 /* ReviewAssignmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B82DEDA1EC21AC90003F0D7 /* ReviewAssignmentCell.swift */; };
+		3B82DEDE1EC2AC9A0003F0D7 /* gradebook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3B82DEDC1EC2AC9A0003F0D7 /* gradebook.xcdatamodeld */; };
 		3BC2EE031E9C19B90037ACA8 /* ClassroomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE021E9C19B80037ACA8 /* ClassroomViewController.swift */; };
 		3BC2EE0C1E9D67CB0037ACA8 /* studentAveragesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE0B1E9D67CB0037ACA8 /* studentAveragesCell.swift */; };
 		3BC2EE0F1EA018380037ACA8 /* CreateAssignmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE0E1EA018380037ACA8 /* CreateAssignmentViewController.swift */; };
 		3BC2EE111EA01ED90037ACA8 /* StudentAssignmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC2EE101EA01ED90037ACA8 /* StudentAssignmentCell.swift */; };
+		3BF6A3421ED3331700A497E0 /* GradeMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A3381ED3331700A497E0 /* GradeMO+CoreDataClass.swift */; };
+		3BF6A3431ED3331700A497E0 /* GradeMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A3391ED3331700A497E0 /* GradeMO+CoreDataProperties.swift */; };
+		3BF6A3441ED3331700A497E0 /* SubjectMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A33A1ED3331700A497E0 /* SubjectMO+CoreDataClass.swift */; };
+		3BF6A3451ED3331700A497E0 /* SubjectMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A33B1ED3331700A497E0 /* SubjectMO+CoreDataProperties.swift */; };
+		3BF6A3461ED3331700A497E0 /* ClassroomMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A33C1ED3331700A497E0 /* ClassroomMO+CoreDataClass.swift */; };
+		3BF6A3471ED3331700A497E0 /* ClassroomMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A33D1ED3331700A497E0 /* ClassroomMO+CoreDataProperties.swift */; };
+		3BF6A3481ED3331700A497E0 /* AssignmentMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A33E1ED3331700A497E0 /* AssignmentMO+CoreDataClass.swift */; };
+		3BF6A3491ED3331700A497E0 /* AssignmentMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A33F1ED3331700A497E0 /* AssignmentMO+CoreDataProperties.swift */; };
+		3BF6A34A1ED3331700A497E0 /* StudentMO+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A3401ED3331700A497E0 /* StudentMO+CoreDataClass.swift */; };
+		3BF6A34B1ED3331700A497E0 /* StudentMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF6A3411ED3331700A497E0 /* StudentMO+CoreDataProperties.swift */; };
 		533A9EFE1E897D0A0005EE22 /* NewClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */; };
 		533A9F001E8985320005EE22 /* SubjectCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */; };
 		533A9F021E8C16FC0005EE22 /* ClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */; };
@@ -24,10 +38,6 @@
 		53F81FF21E6A39B3003447D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53F81FF11E6A39B3003447D4 /* Assets.xcassets */; };
 		53F81FF51E6A39B3003447D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53F81FF31E6A39B3003447D4 /* LaunchScreen.storyboard */; };
 		53F820001E6A39B3003447D4 /* GradeBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F81FFF1E6A39B3003447D4 /* GradeBookTests.swift */; };
-		53F8200B1E6A3BE9003447D4 /* Classroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F8200A1E6A3BE9003447D4 /* Classroom.swift */; };
-		53F8200D1E6A3BFE003447D4 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F8200C1E6A3BFE003447D4 /* Subject.swift */; };
-		53F8200F1E6A3C0F003447D4 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F8200E1E6A3C0F003447D4 /* Student.swift */; };
-		53F820111E6A3C47003447D4 /* Assignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F820101E6A3C47003447D4 /* Assignment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,12 +51,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3B355EDD1F394222006D8220 /* SubjectTemplateMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SubjectTemplateMO+CoreDataClass.swift"; path = "../SubjectTemplateMO+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3B355EDE1F394222006D8220 /* SubjectTemplateMO+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SubjectTemplateMO+CoreDataProperties.swift"; path = "../SubjectTemplateMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3B355EE11F3B34A1006D8220 /* SubjectPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubjectPickerView.swift; sourceTree = "<group>"; };
 		3B82DED81EC21AA90003F0D7 /* AssignmentReviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignmentReviewController.swift; sourceTree = "<group>"; };
 		3B82DEDA1EC21AC90003F0D7 /* ReviewAssignmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewAssignmentCell.swift; sourceTree = "<group>"; };
+		3B82DEDD1EC2AC9A0003F0D7 /* gradebook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = gradebook.xcdatamodel; sourceTree = "<group>"; };
 		3BC2EE021E9C19B80037ACA8 /* ClassroomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassroomViewController.swift; sourceTree = "<group>"; };
 		3BC2EE0B1E9D67CB0037ACA8 /* studentAveragesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = studentAveragesCell.swift; sourceTree = "<group>"; };
 		3BC2EE0E1EA018380037ACA8 /* CreateAssignmentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAssignmentViewController.swift; sourceTree = "<group>"; };
 		3BC2EE101EA01ED90037ACA8 /* StudentAssignmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentAssignmentCell.swift; sourceTree = "<group>"; };
+		3BF6A3381ED3331700A497E0 /* GradeMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GradeMO+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3BF6A3391ED3331700A497E0 /* GradeMO+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GradeMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3BF6A33A1ED3331700A497E0 /* SubjectMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SubjectMO+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3BF6A33B1ED3331700A497E0 /* SubjectMO+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SubjectMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3BF6A33C1ED3331700A497E0 /* ClassroomMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ClassroomMO+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3BF6A33D1ED3331700A497E0 /* ClassroomMO+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ClassroomMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3BF6A33E1ED3331700A497E0 /* AssignmentMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AssignmentMO+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3BF6A33F1ED3331700A497E0 /* AssignmentMO+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AssignmentMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3BF6A3401ED3331700A497E0 /* StudentMO+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentMO+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3BF6A3411ED3331700A497E0 /* StudentMO+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		533A9EFD1E897D0A0005EE22 /* NewClassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewClassViewController.swift; sourceTree = "<group>"; };
 		533A9EFF1E8985320005EE22 /* SubjectCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubjectCollectionCell.swift; sourceTree = "<group>"; };
 		533A9F011E8C16FC0005EE22 /* ClassTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassTableViewCell.swift; sourceTree = "<group>"; };
@@ -62,10 +86,6 @@
 		53F81FFB1E6A39B3003447D4 /* GradeBookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GradeBookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53F81FFF1E6A39B3003447D4 /* GradeBookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradeBookTests.swift; sourceTree = "<group>"; };
 		53F820011E6A39B3003447D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		53F8200A1E6A3BE9003447D4 /* Classroom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Classroom.swift; sourceTree = "<group>"; };
-		53F8200C1E6A3BFE003447D4 /* Subject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
-		53F8200E1E6A3C0F003447D4 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
-		53F820101E6A3C47003447D4 /* Assignment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assignment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,13 +148,34 @@
 			children = (
 				3BC2EE0E1EA018380037ACA8 /* CreateAssignmentViewController.swift */,
 				3BC2EE101EA01ED90037ACA8 /* StudentAssignmentCell.swift */,
+				3B355EE11F3B34A1006D8220 /* SubjectPickerView.swift */,
 			);
 			name = "Create Assignment";
+			sourceTree = "<group>";
+		};
+		3BF6A3251ED329C500A497E0 /* CD Objects */ = {
+			isa = PBXGroup;
+			children = (
+				3BF6A3381ED3331700A497E0 /* GradeMO+CoreDataClass.swift */,
+				3BF6A3391ED3331700A497E0 /* GradeMO+CoreDataProperties.swift */,
+				3BF6A33A1ED3331700A497E0 /* SubjectMO+CoreDataClass.swift */,
+				3BF6A33B1ED3331700A497E0 /* SubjectMO+CoreDataProperties.swift */,
+				3BF6A33C1ED3331700A497E0 /* ClassroomMO+CoreDataClass.swift */,
+				3BF6A33D1ED3331700A497E0 /* ClassroomMO+CoreDataProperties.swift */,
+				3BF6A33E1ED3331700A497E0 /* AssignmentMO+CoreDataClass.swift */,
+				3BF6A33F1ED3331700A497E0 /* AssignmentMO+CoreDataProperties.swift */,
+				3BF6A3401ED3331700A497E0 /* StudentMO+CoreDataClass.swift */,
+				3BF6A3411ED3331700A497E0 /* StudentMO+CoreDataProperties.swift */,
+				3B355EDD1F394222006D8220 /* SubjectTemplateMO+CoreDataClass.swift */,
+				3B355EDE1F394222006D8220 /* SubjectTemplateMO+CoreDataProperties.swift */,
+			);
+			name = "CD Objects";
 			sourceTree = "<group>";
 		};
 		53F81FDE1E6A39B3003447D4 = {
 			isa = PBXGroup;
 			children = (
+				3B82DEDC1EC2AC9A0003F0D7 /* gradebook.xcdatamodeld */,
 				535F223E1E82EA680059C9DB /* designNotes.rtf */,
 				53F81FE91E6A39B3003447D4 /* GradeBook */,
 				53F81FFE1E6A39B3003447D4 /* GradeBookTests */,
@@ -161,10 +202,7 @@
 				3BC2EE0D1EA017010037ACA8 /* Create Assignment */,
 				3B82DED71EC21A5F0003F0D7 /* ReviewStudentsAssignments */,
 				53F81FEE1E6A39B3003447D4 /* Main.storyboard */,
-				53F8200A1E6A3BE9003447D4 /* Classroom.swift */,
-				53F8200C1E6A3BFE003447D4 /* Subject.swift */,
-				53F8200E1E6A3C0F003447D4 /* Student.swift */,
-				53F820101E6A3C47003447D4 /* Assignment.swift */,
+				3BF6A3251ED329C500A497E0 /* CD Objects */,
 				53F81FF11E6A39B3003447D4 /* Assets.xcassets */,
 				53F81FF31E6A39B3003447D4 /* LaunchScreen.storyboard */,
 				53F81FF61E6A39B3003447D4 /* Info.plist */,
@@ -286,21 +324,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BF6A3471ED3331700A497E0 /* ClassroomMO+CoreDataProperties.swift in Sources */,
+				3BF6A34A1ED3331700A497E0 /* StudentMO+CoreDataClass.swift in Sources */,
+				3BF6A3441ED3331700A497E0 /* SubjectMO+CoreDataClass.swift in Sources */,
 				3B82DEDB1EC21AC90003F0D7 /* ReviewAssignmentCell.swift in Sources */,
+				3BF6A3431ED3331700A497E0 /* GradeMO+CoreDataProperties.swift in Sources */,
+				3BF6A3421ED3331700A497E0 /* GradeMO+CoreDataClass.swift in Sources */,
 				533A9EFE1E897D0A0005EE22 /* NewClassViewController.swift in Sources */,
-				53F820111E6A3C47003447D4 /* Assignment.swift in Sources */,
+				3B82DEDE1EC2AC9A0003F0D7 /* gradebook.xcdatamodeld in Sources */,
+				3BF6A3481ED3331700A497E0 /* AssignmentMO+CoreDataClass.swift in Sources */,
 				533A9F001E8985320005EE22 /* SubjectCollectionCell.swift in Sources */,
 				3BC2EE0F1EA018380037ACA8 /* CreateAssignmentViewController.swift in Sources */,
+				3BF6A3451ED3331700A497E0 /* SubjectMO+CoreDataProperties.swift in Sources */,
 				3B82DED91EC21AA90003F0D7 /* AssignmentReviewController.swift in Sources */,
 				533A9F041E8C30130005EE22 /* StudentListCell.swift in Sources */,
+				3B355EE01F394222006D8220 /* SubjectTemplateMO+CoreDataProperties.swift in Sources */,
 				3BC2EE111EA01ED90037ACA8 /* StudentAssignmentCell.swift in Sources */,
-				53F8200D1E6A3BFE003447D4 /* Subject.swift in Sources */,
-				53F8200B1E6A3BE9003447D4 /* Classroom.swift in Sources */,
+				3BF6A3461ED3331700A497E0 /* ClassroomMO+CoreDataClass.swift in Sources */,
+				3BF6A3491ED3331700A497E0 /* AssignmentMO+CoreDataProperties.swift in Sources */,
+				3B355EDF1F394222006D8220 /* SubjectTemplateMO+CoreDataClass.swift in Sources */,
 				3BC2EE0C1E9D67CB0037ACA8 /* studentAveragesCell.swift in Sources */,
+				3B355EE21F3B34A1006D8220 /* SubjectPickerView.swift in Sources */,
 				53F81FED1E6A39B3003447D4 /* ViewController.swift in Sources */,
-				53F8200F1E6A3C0F003447D4 /* Student.swift in Sources */,
 				53F81FEB1E6A39B3003447D4 /* AppDelegate.swift in Sources */,
 				533A9F021E8C16FC0005EE22 /* ClassTableViewCell.swift in Sources */,
+				3BF6A34B1ED3331700A497E0 /* StudentMO+CoreDataProperties.swift in Sources */,
 				3BC2EE031E9C19B90037ACA8 /* ClassroomViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -521,6 +569,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		3B82DEDC1EC2AC9A0003F0D7 /* gradebook.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3B82DEDD1EC2AC9A0003F0D7 /* gradebook.xcdatamodel */,
+			);
+			currentVersion = 3B82DEDD1EC2AC9A0003F0D7 /* gradebook.xcdatamodel */;
+			path = gradebook.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 53F81FDF1E6A39B3003447D4 /* Project object */;
 }

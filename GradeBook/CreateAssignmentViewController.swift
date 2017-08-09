@@ -8,29 +8,49 @@
 
 import Foundation
 import UIKit
+import CoreData
 
-class CreateAssignmentViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class CreateAssignmentViewController: UIViewController, UITableViewDataSource, UITableViewDelegate/*, UIPickerViewDelegate, UIPickerViewDataSource*/ {
 
-    var classSubjects = [Subject]()
-    var students = [Student]()//each item is copied and should be separate from the actual list in the classroom
+    var classSubjects = [SubjectMO]()
+    var students = [StudentMO]()
     var studentScores = [String: Int]()
-    var selectedSubject:Subject? = nil
+    var selectedSubject:SubjectMO? = nil
+    var newAssignment:AssignmentMO? = nil
     
-    @IBOutlet weak var subjectPicker: UIPickerView!
+    var moc:NSManagedObjectContext? = nil
+    
+    //@IBOutlet weak var subjectPicker: UIPickerView!
     @IBOutlet weak var assignmentName: UITextField!
     @IBOutlet weak var assignmentTotalPoints: UITextField!
     @IBOutlet weak var studentTable: UITableView!
     @IBOutlet weak var gradesView: UIView!
     @IBOutlet weak var subjectSelectionView: UIView!
     @IBOutlet weak var SubjectDisplay: UITextField!
+    @IBOutlet weak var ActiveSwitch: UISwitch!
     
     var currentTextField:UITextField?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        gradesView.isHidden = true
-        selectedSubject = self.selectedSubjectOnPickerView()
+        //gradesView.isHidden = true
+        //gradesView.isUserInteractionEnabled = false
+        //selectedSubject = self.selectedSubjectOnPickerView()
         studentTable.reloadData()
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        moc = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "AssignmentMO", in: moc!)!
+        
+        newAssignment = NSManagedObject(entity: entity, insertInto: moc!) as? AssignmentMO
+        
+
+
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.view.endEditing(false)
@@ -41,26 +61,82 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
     }
     @IBAction func editGrades(_ sender: Any) {
         subjectSelectionView.isHidden = true
-        gradesView.isHidden = false
+        //gradesView.isHidden = false
+        //gradesView.isUserInteractionEnabled = true
         assignmentName.isEnabled = false
         assignmentTotalPoints.isEnabled = false
-        SubjectDisplay.text = selectedSubjectOnPickerView().name
+        //SubjectDisplay.text = selectedSubjectOnPickerView().name
         SubjectDisplay.isEnabled = false
+        
+        let entity = NSEntityDescription.entity(forEntityName: "AssignmentMO", in: moc!)!
+
+        newAssignment = NSManagedObject(entity: entity, insertInto: moc!) as? AssignmentMO
+        
+        newAssignment?.name = assignmentName.text
+        newAssignment?.status = ActiveSwitch.isOn
+        newAssignment?.totalPoints = Int64(assignmentTotalPoints.text!)!
+        newAssignment?.subject = selectedSubject
+        
+        selectedSubject?.addToAssignments(newAssignment!)
         
         studentTable.reloadData()
     }
+    
+    @IBAction func selectSubject(_ sender:Any) {
+        let storyboard = UIStoryboard(name:"Main", bundle:nil)
+        let subjectPickerVC = storyboard.instantiateViewController(withIdentifier: "SubjectPickerView") as! SubjectPickerViewController
+        
+        subjectPickerVC.classSubjects = classSubjects
+        
+        subjectPickerVC.selectedSubjectAction = {()
+                print("dismissing the subject picker view")
+                self.selectedSubject = subjectPickerVC.selectedSubject
+                self.SubjectDisplay.text = self.selectedSubject?.name
+                self.SubjectDisplay.endEditing(true)
+            }
+        
+        subjectPickerVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+        self.present(subjectPickerVC, animated: true, completion: {()
+            print("present subject picker complete")
+        })
+
+    }
+    
     @IBAction func assignGrade(_ sender: Any) {
         let textField = sender as! UITextField
         let currentAssignmentCell:StudentAssignmentCell = textField.superview?.superview as! StudentAssignmentCell
-        let currentStudent:Student  = currentAssignmentCell.studentObj!
+        let currentStudent:StudentMO  = currentAssignmentCell.studentObj!
         
-        let studentSubject = currentStudent.subjects[(selectedSubject?.name)!]
-        let newAssignment = Assignment.init(title: assignmentName.text!, grade: Int(currentAssignmentCell.gradeField.text!)!, totalPoints: Int(assignmentTotalPoints.text!)!)
-        studentSubject?.addAssingment(newAssignment: newAssignment)
+        let entity = NSEntityDescription.entity(forEntityName: "GradeMO", in: moc!)!
+        
+        let grade:GradeMO = NSManagedObject(entity: entity, insertInto: moc!) as! GradeMO
+        grade.assignment = newAssignment
+        grade.student = currentStudent
+        grade.score = Float(currentAssignmentCell.gradeField.text!)!
+        
+        currentStudent.addToGrades(grade)
         
         currentTextField = nil
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+
+        newAssignment?.name = assignmentName.text
+        newAssignment?.status = ActiveSwitch.isOn
+        newAssignment?.totalPoints = Int64(assignmentTotalPoints.text!)!
+        newAssignment?.subject = selectedSubject
+
+        do {
+            try moc?.save()
+        } catch let error as NSError {
+            print("Could not save after closing assignment view. \(error), \(error.userInfo)")
+        }
+ 
+    }
     @IBAction func cancel(_ sender: UIBarButtonItem) {
+        //undo changes since we canceled.
+        moc?.rollback()
+        
         let isPresentingInAddMode = presentingViewController is UINavigationController
         if isPresentingInAddMode {
             dismiss(animated: true, completion: nil)
@@ -88,7 +164,7 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
     }
     //UIPickerViewDelegate functions
     //not really a delegate function but it is a picker utility
-    func selectedSubjectOnPickerView() -> Subject {
+/*    func selectedSubjectOnPickerView() -> SubjectMO {
         return classSubjects[subjectPicker.selectedRow(inComponent: 0)]
     }
     
@@ -97,6 +173,7 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedSubject = classSubjects[subjectPicker.selectedRow(inComponent: 0)]
+        SubjectDisplay.text = selectedSubject?.name
     }
     //UIPickerViewDataSource functions
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -104,6 +181,6 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
     }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return classSubjects.count
-    }
+    }*/
     
 }

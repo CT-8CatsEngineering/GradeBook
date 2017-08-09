@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import CoreData
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, NSFetchedResultsControllerDelegate {
 
     @IBOutlet weak var classesTable: UITableView!
-    var classes = [Classroom]()
-    var subjects = [Subject]()
+    var classes = [ClassroomMO]()
+    var subjects = [SubjectTemplateMO]()
     var lastStudentID:Int = 0
     var classFiles = [String]()
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -20,8 +21,10 @@ class ViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        subjects = self.defaultSubjects()
-        checkLoadedClassroomFiles()
+        loadFromCoreData()
+        if subjects.count == 0 {
+            subjects = self.defaultSubjects()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,72 +32,130 @@ class ViewController: UIViewController, UITableViewDataSource {
         // Dispose of any resources that can be recreated.
     }
 
-    func defaultSubjects()->[Subject] {
+    func loadFromCoreData() {
         
-        var defaultSubjects = [Subject]()
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
         
-        let reading = Subject.init(name: "Reading", abr: "R", gradeScale: 100)
-        defaultSubjects.append(reading)
-        let writing = Subject.init(name: "Writing", abr: "Wr", gradeScale: 100)
-        defaultSubjects.append(writing)
-        let math = Subject.init(name: "Math", abr: "M", gradeScale: 100)
-        defaultSubjects.append(math)
-        let science = Subject.init(name: "Science", abr: "Sci", gradeScale: 100)
-        defaultSubjects.append(science)
-        let socialStudies = Subject.init(name: "Social Studies", abr: "SS", gradeScale: 100)
-        defaultSubjects.append(socialStudies)
-        let wordStudies = Subject.init(name: "Word Studies", abr: "WS", gradeScale: 100)
-        defaultSubjects.append(wordStudies)
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
         
+        //2
+        let classfetchRequest =
+            NSFetchRequest<ClassroomMO>(entityName: "ClassroomMO")
+        let subjectTemplatefetchRequest =
+            NSFetchRequest<SubjectTemplateMO>(entityName: "SubjectTemplateMO")
+        
+        //3
+        do {
+            classes = try managedContext.fetch(classfetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch classes. \(error), \(error.userInfo)")
+        }
+        do {
+            subjects = try managedContext.fetch(subjectTemplatefetchRequest)
+        } catch let error as NSError {
+            print("Could not classes fetch subjects. \(error), \(error.userInfo)")
+        }
+
+    }
+    
+    func defaultSubjects()->[SubjectTemplateMO] {
+        
+        var defaultSubjects = [SubjectTemplateMO]()
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return defaultSubjects
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let entity =
+            NSEntityDescription.entity(forEntityName: "SubjectTemplateMO",
+                                       in: managedContext)!
+        
+        let reading:SubjectTemplateMO = NSManagedObject(entity: entity,
+                                     insertInto: managedContext) as! SubjectTemplateMO
+        
+        reading.name = "Reading"
+        reading.abbreviation = "R"
+        reading.gradeScale = 100
+
+        let writing:SubjectTemplateMO = NSManagedObject(entity: entity,
+                                                        insertInto: managedContext) as! SubjectTemplateMO
+        
+        writing.name = "Writing"
+        writing.abbreviation = "Wr"
+        writing.gradeScale = 100
+        
+        let math:SubjectTemplateMO = NSManagedObject(entity: entity,
+                                                        insertInto: managedContext) as! SubjectTemplateMO
+        
+        math.name = "Math"
+        math.abbreviation = "M"
+        math.gradeScale = 100
+
+        let science:SubjectTemplateMO = NSManagedObject(entity: entity,
+                                                        insertInto: managedContext) as! SubjectTemplateMO
+        
+        science.name = "Science"
+        science.abbreviation = "Sci"
+        science.gradeScale = 100
+
+        let socialStudies:SubjectTemplateMO = NSManagedObject(entity: entity,
+                                                        insertInto: managedContext) as! SubjectTemplateMO
+        
+        socialStudies.name = "Social Studies"
+        socialStudies.abbreviation = "SS"
+        socialStudies.gradeScale = 100
+
+        let wordStudies:SubjectTemplateMO = NSManagedObject(entity: entity,
+                                                        insertInto: managedContext) as! SubjectTemplateMO
+        
+        wordStudies.name = "Word Studies"
+        wordStudies.abbreviation = "WS"
+        wordStudies.gradeScale = 100
+
+        do {
+            try managedContext.save()
+            defaultSubjects.append(reading)
+            defaultSubjects.append(writing)
+            defaultSubjects.append(math)
+            defaultSubjects.append(science)
+            defaultSubjects.append(socialStudies)
+            defaultSubjects.append(wordStudies)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+
         return defaultSubjects
     }
-    func loadClassRoomFromFile(path:String) -> Classroom {
-        let classroom = NSKeyedUnarchiver.unarchiveObject(withFile: path)
-        
-        if classroom == nil {
-            fatalError("failed to unarchive the file into a classroom")
-        }
-        
-        return classroom as! Classroom
-    }
-
-    func checkLoadedClassroomFiles() {
-        let saveFile:URL =  appDelegate.classroomSaveFilePath()
-        let fileManager = FileManager.default
-        do {
-            let files = try fileManager.contentsOfDirectory(atPath: saveFile.path)
-            for path in files{
-                let filePath = saveFile.appendingPathComponent(path)
-                if !classFiles.contains(filePath.path) {
-                    let newClass = loadClassRoomFromFile(path: filePath.path)
-                    if classes.contains(newClass) { //somehow the class is in the list but the file path is not. update the file path array
-                        classFiles.append(filePath.path)
-                    } else { //this is a new class file, load the data and add the class and path to the arrays.
-                        classes.append(newClass)
-                        classFiles.append(filePath.path)
-                    }
-                }
-            }
-            reloadTableContents()
-
-        } catch {
-            print("failed to get the contents of the classroom Directory")
-        }
-    }
+    
     func deleteClassroom(atIndex:Int) {
         let tmpClass = classes[atIndex]
-        classes.remove(at: atIndex)
-        var saveFile:URL =  appDelegate.classroomSaveFilePath()
-        saveFile.appendPathComponent(tmpClass.className)
-        let fileManager = FileManager.default
-        if fileManager.fileExists(atPath: saveFile.path) {
-            do {
-                try fileManager.removeItem(at: saveFile)
-            } catch {
-                print("failed to remove the classroom file")
-            }
-}
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+
+        managedContext.delete(tmpClass)
+
+        do {
+            try managedContext.save()
+            classes.remove(at: atIndex)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
     }
+    
     func reloadTableContents() {
         classesTable.reloadData()
     }
@@ -136,8 +197,8 @@ class ViewController: UIViewController, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:ClassTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ClassTableCell") as! ClassTableViewCell
         
-        cell.ClassNameView.text = classes[indexPath.last!].className
-        cell.StudentNumber.text = "\(classes[indexPath.last!].students.count) Students"
+        cell.ClassNameView.text = classes[indexPath.last!].name
+        cell.StudentNumber.text = "\(classes[indexPath.last!].students?.count ?? 0) Students"
         cell.classObject = classes[indexPath.last!]
         
         return cell

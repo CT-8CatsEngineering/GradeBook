@@ -15,6 +15,6 @@ class ClassTableViewCell: UITableViewCell {
     @IBOutlet weak var ClassNameView: UILabel!
     @IBOutlet weak var StudentNumber: UILabel!
     
-    weak var classObject:Classroom?
+    weak var classObject:ClassroomMO?
     
 }

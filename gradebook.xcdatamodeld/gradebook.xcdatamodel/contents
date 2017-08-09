@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AssignmentMO" representedClassName="AssignmentMO" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="totalPoints" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="grades" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="GradeMO" inverseName="assignment" inverseEntity="GradeMO" syncable="YES"/>
+        <relationship name="subject" maxCount="1" deletionRule="Nullify" destinationEntity="SubjectMO" inverseName="assignments" inverseEntity="SubjectMO" syncable="YES"/>
+    </entity>
+    <entity name="ClassroomMO" representedClassName="ClassroomMO" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="students" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="StudentMO" inverseName="classroom" inverseEntity="StudentMO" syncable="YES"/>
+        <relationship name="subjects" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SubjectMO" inverseName="classroom" inverseEntity="SubjectMO" syncable="YES"/>
+        <fetchedProperty name="classAverages" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="ClassroomMO"/>
+        </fetchedProperty>
+    </entity>
+    <entity name="GradeMO" representedClassName="GradeMO" syncable="YES">
+        <attribute name="score" optional="YES" attributeType="Float" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="assignment" maxCount="1" deletionRule="Nullify" destinationEntity="AssignmentMO" inverseName="grades" inverseEntity="AssignmentMO" syncable="YES"/>
+        <relationship name="student" maxCount="1" deletionRule="Nullify" destinationEntity="StudentMO" inverseName="grades" inverseEntity="StudentMO" syncable="YES"/>
+    </entity>
+    <entity name="StudentMO" representedClassName="StudentMO" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="classroom" maxCount="1" deletionRule="Nullify" destinationEntity="ClassroomMO" inverseName="students" inverseEntity="ClassroomMO" syncable="YES"/>
+        <relationship name="grades" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="GradeMO" inverseName="student" inverseEntity="GradeMO" syncable="YES"/>
+    </entity>
+    <entity name="SubjectMO" representedClassName="SubjectMO" syncable="YES">
+        <attribute name="abbreviation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gradeScale" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="assignments" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="AssignmentMO" inverseName="subject" inverseEntity="AssignmentMO" syncable="YES"/>
+        <relationship name="classroom" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ClassroomMO" inverseName="subjects" inverseEntity="ClassroomMO" syncable="YES"/>
+        <fetchedProperty name="subjectAverage" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="SubjectMO"/>
+        </fetchedProperty>
+    </entity>
+    <entity name="SubjectTemplateMO" representedClassName="SubjectTemplateMO" syncable="YES">
+        <attribute name="abbreviation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gradeScale" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="AssignmentMO" positionX="-270" positionY="-373" width="128" height="118"/>
+        <element name="ClassroomMO" positionX="-234" positionY="-729" width="128" height="116"/>
+        <element name="GradeMO" positionX="-90" positionY="-388" width="128" height="88"/>
+        <element name="StudentMO" positionX="-27" positionY="-594" width="128" height="103"/>
+        <element name="SubjectMO" positionX="-423" positionY="-540" width="128" height="146"/>
+        <element name="SubjectTemplateMO" positionX="-225" positionY="-576" width="128" height="90"/>
+    </elements>
+</model>
