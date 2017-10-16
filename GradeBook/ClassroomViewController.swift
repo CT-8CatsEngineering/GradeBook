@@ -17,6 +17,8 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
     var classroom:ClassroomMO?
     var lastAssignmentID:Int = 0
     
+    var tappedSubject:SubjectMO?
+    
     @IBOutlet weak var studentTableView: UITableView!
     
     override func viewDidLoad() {
@@ -53,11 +55,33 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
             let currentStudent:StudentMO = (classroom?.students![(indexPath?.last!)!])! as! StudentMO
             reviewAssignmentController.currentStudent = currentStudent
 
-        } else {
+        } else if segue.identifier == "subjectAssignmentsSegue" {
+            print("going to the subject assignments panel")
+            /*let navControl = segue.destination as? UINavigationController
+            //let newAssignmentController = segue.destination as! CreateAssignmentViewController
+            guard let subjectVC = navControl?.topViewController as? SubjectAssignmentReviewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }*/
+            
+
+        }else {
             print("neither the assignment button nor the student detail was pressed, going back to the list of classes")
         }
         
     }
+    
+    func openSubjectDetails(sender:UITapGestureRecognizer) {
+        //print("stackview accessibility name: \((sender.view as! SubjectStackView).subject)")
+        let mystoryboard:UIStoryboard = UIStoryboard.init(name:"Main", bundle: nil)
+        let navControl:UINavigationController = mystoryboard.instantiateViewController(withIdentifier: "SubjectAssignmentView") as! UINavigationController
+        let subjectVC:SubjectAssignmentReviewController = navControl.topViewController as! SubjectAssignmentReviewController
+        
+        subjectVC.currentSubject = (sender.view as! SubjectStackView).subject
+        
+        //performSegue(withIdentifier: "SubjectAssignmentView", sender: self)
+        self.navigationController?.pushViewController(subjectVC, animated: true)
+    }
+    
     func setUpClassAverageStack() {
         let x = 0
         let height:Int = Int(classAveragesStack.frame.height)
@@ -67,10 +91,15 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
         for (subject, score) in (classroom?.calculateWholeClassAverages())! {
             
             let frame = CGRect(x: x, y: 0, width: width, height: height)
-            let subjectView:UIStackView = UIStackView.init(frame: frame)
+            let subjectView:SubjectStackView = SubjectStackView.init(frame: frame)
+            subjectView.subject = subject
             subjectView.accessibilityIdentifier = "\(subject.name ?? "")"
             subjectView.axis = UILayoutConstraintAxis.vertical
             subjectView.backgroundColor = UIColor.lightGray
+            
+            let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.openSubjectDetails(sender:)))
+            subjectView.isUserInteractionEnabled = true
+            subjectView.addGestureRecognizer(tap)
             
             let abreviationLabel = UILabel.init()
             abreviationLabel.accessibilityIdentifier = "abreviationLabel"
@@ -124,18 +153,19 @@ class ClassroomViewController: UIViewController, UITableViewDataSource, UITableV
         classAveragesStack.setNeedsDisplay()
         
     }
+    
     @IBAction func unwindToClassroom(sender: UIStoryboardSegue) {
-        //save changes
+        
+    }
+    @IBAction func unwindFromAssignmentDetails(sender: UIStoryboardSegue) {
         //if let sourceViewController = sender.source as? NewClassViewController, let newClass = sourceViewController.newClass
         if sender.identifier == "saveNewAssignmentSegue" {
             self.updateClassAverageStack()
             studentTableView.reloadData()
         }
-        print("unwinding from creating an assignment")
-        //and save
         
     }
-    
+   
     //UITableViewDataSource functions
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:studentAveragesCell = tableView.dequeueReusableCell(withIdentifier: "StudentWithAverage") as! studentAveragesCell

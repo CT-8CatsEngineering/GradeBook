@@ -10,27 +10,24 @@ import Foundation
 import UIKit
 import CoreData
 
-class NewClassViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource  {
+class NewClassViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource,UITableViewDelegate {
     @IBOutlet weak var studentListView: UITableView!
     @IBOutlet weak var classNameField: UITextField!
-    @IBOutlet weak var filePicker: UIPickerView!
-    @IBOutlet weak var classListView: UIView!
-    @IBOutlet weak var ImportView: UIView!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     @IBOutlet weak var saveButton: UIBarButtonItem!
     var selectedSubjects:NSMutableOrderedSet = NSMutableOrderedSet.init()
     var parentView: ViewController?
     var students = [String]()
     var newClass:ClassroomMO?
-    var filenames = [String]()
+    
+    var selectedFileURL:URL = URL.init(string: "/")!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let uiController = self.presentingViewController?.childViewControllers[0]
         parentView = (uiController as! ViewController)
-        classListView.isHidden = true
-        loadFileNames()
+        //loadFileNames()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -46,18 +43,28 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
     @IBAction func clearClassList(_ sender: Any) {
         students.removeAll()
         studentListView.reloadData()
-        classListView.isHidden = true
-        ImportView.isHidden = false
     }
-    
-    @IBAction func helpDisclosure(_ sender: Any) {
-    }
-    
-    @IBAction func loadSelectedFile(_ sender: Any) {
-        self.loadStudentsFromFile()
-        ImportView.isHidden = true
-        studentListView.reloadData()
-        classListView.isHidden = false
+        
+    @IBAction func importFromFile(_ sender: Any) {
+        let storyboard = UIStoryboard(name:"Main", bundle:nil)
+        let filePickerVC = storyboard.instantiateViewController(withIdentifier: "FileImportSelectionView") as! ImportFilePickerViewController
+        
+        filePickerVC.loadFileNames()
+        
+        filePickerVC.selectedFileImportAction = {()
+            print("dismissing the subject picker view")
+            self.selectedFileURL = filePickerVC.selectedFileURL
+            self.loadStudentsFromFile()
+            self.studentListView.reloadData()
+        }
+        
+        filePickerVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+        self.present(filePickerVC, animated: true, completion: {()
+            print("present subject picker complete")
+        })
+
+        //self.loadStudentsFromFile()
+        //studentListView.reloadData()
     }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
@@ -143,59 +150,43 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
     func updateStudentName(inName:String, position:Int){
         students[position]=inName
     }
-    func loadFileNames() {
-        //also look into implementing UIDocumentPickerViewController later and UIDocumentInteractionController
-        let fileManager = FileManager.default
-        let dirs = fileManager.urls(for: .documentDirectory, in: .userDomainMask).last
-        var filename:URL = dirs!
-        filename.appendPathComponent("StudentLists")
-        let studentListDirectory = filename
-        let nameString = "Joe Smith,Ann Lin,Zack Smith,Beth Lin,Laura Smith,Larry Lin,Ben Smith,Mary Lin"
-        let nameString2 = "Bob Dylan,Jeff Morrison,Zack Taylor,Kelsey Gram,Lindsey Lohan,Kattie Perry"
-        do {
-            if !fileManager.fileExists(atPath: filename.absoluteString) {
-                try fileManager.createDirectory(at: filename, withIntermediateDirectories: true, attributes: nil)
-            }
-            let filename2 = filename.appendingPathComponent("testFile2.rft")
-            filename.appendPathComponent("testFile.rtf")
-            if !fileManager.fileExists(atPath: filename.absoluteString) {
-                try nameString.write(to: filename, atomically: false, encoding: String.Encoding.utf8)
-            }
-            if !fileManager.fileExists(atPath: filename2.absoluteString) {
-                try nameString2.write(to: filename2, atomically: false, encoding: String.Encoding.utf8)
-            }
-            let dirsPath = (studentListDirectory.path)
-            let contents = fileManager.subpaths(atPath:dirsPath )
-
-            for pathString in contents! {
-                filenames.append(studentListDirectory.appendingPathComponent(pathString).absoluteString)
-            }
-        } catch {
-            print("failed to write to file or get contents")
-        }
-        
-        
-        
-    }
     
     func loadStudentsFromFile() {
-        
-        let selectedFileIndex = filePicker.selectedRow(inComponent: 0)
-        let selectedFilename = filenames[selectedFileIndex]
-        
         do {
-            let fileString = try String.init(contentsOf: URL.init(string: selectedFilename)!)
-            let studentLines = fileString.components(separatedBy: ",")
+            var studentLines:[String] = [String]()
+            if selectedFileURL.pathExtension == "txt"  {
+                let fileString:String = try String.init(contentsOf: selectedFileURL)
+                
+                studentLines = self.parseStudentList(inputString: fileString)
+                
+            } else if selectedFileURL.pathExtension == "rtf"{
+                let fileData = try Data.init(contentsOf: selectedFileURL)
+                let fileString:String = try NSAttributedString.init(data:fileData, documentAttributes:nil).string
+                
+                studentLines = self.parseStudentList(inputString: fileString)
+            }
             
             for studentName in studentLines {
                 students.append(studentName)
             }
-        
+            
         }
         catch {
             print("error reading from file")
         }
         
+    }
+    
+    func parseStudentList(inputString:String)->[String] {
+        //If necessary put more logic for determining comma/newline separators in this function.
+        //one possiblity is to limit the length of the components and if they exceed that try the other separator. May also help eliminate incorrect files.
+        var studentLines:[String] = [String]()
+        if inputString.contains(",") {
+            studentLines = inputString.components(separatedBy: ",")
+        } else {
+            studentLines = inputString.components(separatedBy: "\n")
+        }
+        return studentLines
     }
     
     func loadStudents()->[StudentMO] {
@@ -285,40 +276,58 @@ class NewClassViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
 
     //UITableViewDataSource functions
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2//first section contains a cell for creating new students. Second section contains the actual list for of students
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:StudentListCell = tableView.dequeueReusableCell(withIdentifier: "StudentCell") as! StudentListCell
-        
-        cell.studentNameField.text = students[indexPath.last!]
-        cell.controller = self
-        cell.position = indexPath.last!
-        
-        return cell
+        if indexPath.first == 1 {
+            let cell:StudentListCell = tableView.dequeueReusableCell(withIdentifier: "StudentCell") as! StudentListCell
+            
+            cell.studentNameField.text = students[indexPath.last!]
+            cell.controller = self
+            cell.position = indexPath.last!
+            
+            return cell
+        } else {
+            let cell:NewStudentCell = tableView.dequeueReusableCell(withIdentifier: "NewStudentCell") as! NewStudentCell
+            cell.controller = self
+            
+            return cell
+        }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return students.count
+        if section == 1 {
+            return students.count
+        } else {
+            return 1
+        }
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         // allows deletion of students
-        if students.count > 1 {
-            students.remove(at: indexPath.last!)
-            tableView.reloadData()
+        if indexPath.first == 1 {
+            if students.count > 1 {
+                students.remove(at: indexPath.last!)
+                tableView.reloadData()
+            } else {
+                self.clearClassList(self)
+            }
         } else {
-            self.clearClassList(self)
+            
         }
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        if indexPath.first == 1 {
+            return true
+        } else {
+            return false
+        }
     }
-    
-    //UIPickerViewDelegate functions
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?{
-        return URL.init(string:filenames[row])?.lastPathComponent
-    }
-    //UIPickerViewDataSource functions
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return filenames.count
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.first == 0 {
+            return CGFloat(72)
+        } else {
+            return CGFloat(42)
+        }
     }
 }

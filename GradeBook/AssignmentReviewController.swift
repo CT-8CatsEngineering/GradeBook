@@ -51,6 +51,27 @@ class AssignmentReviewController: UIViewController, UITableViewDataSource, UITab
         assignmentTable.reloadData()
         
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == "StudentAssignmentSegue" {
+            print("going to the assignment's grade review panel")
+            let navControl = segue.destination as? UINavigationController
+            //let assignmentController = segue.destination as! CreateAssignmentViewController
+            guard let assignmentViewController = navControl?.topViewController as? AssignmentGradesViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            let tableSelectionIndex:IndexPath = (assignmentTable.indexPathForSelectedRow)!
+            
+            let sectionSubject:SubjectMO = subjects?[tableSelectionIndex.first!] as! SubjectMO
+
+            assignmentViewController.currentAssignment = (gradesBySubject?[sectionSubject]?[tableSelectionIndex.last!])?.assignment
+        } else {
+            print("neither the assignment button nor the student detail was pressed, going back to the list of classes")
+        }
+    }
+
     //UITableViewDataSource functions
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:ReviewAssignmentCell = tableView.dequeueReusableCell(withIdentifier: "AssignmentReviewCell") as! ReviewAssignmentCell

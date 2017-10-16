@@ -18,7 +18,7 @@ public class AssignmentMO: NSManagedObject {
             average += (grade as! GradeMO).score/Float(totalPoints)
         }
         average = average/Float((grades?.count)!)
-        
+                
         return average
     }
 }

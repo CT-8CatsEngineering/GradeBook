@@ -16,7 +16,7 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
     var students = [StudentMO]()
     var studentScores = [String: Int]()
     var selectedSubject:SubjectMO? = nil
-    var newAssignment:AssignmentMO? = nil
+    var currentAssignment:AssignmentMO? = nil
     
     var moc:NSManagedObjectContext? = nil
     
@@ -36,8 +36,6 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         //gradesView.isHidden = true
         //gradesView.isUserInteractionEnabled = false
         //selectedSubject = self.selectedSubjectOnPickerView()
-        studentTable.reloadData()
-        
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
                 return
@@ -45,11 +43,29 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         
         moc = appDelegate.persistentContainer.viewContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "AssignmentMO", in: moc!)!
-        
-        newAssignment = NSManagedObject(entity: entity, insertInto: moc!) as? AssignmentMO
-        
+        if currentAssignment != nil {
+            assignmentName.text = currentAssignment?.name
+            ActiveSwitch.isOn = (currentAssignment?.status)!
+            assignmentTotalPoints.text! = "\(currentAssignment?.totalPoints ?? 0)"
+            selectedSubject = currentAssignment?.subject
+            self.SubjectDisplay.text = self.selectedSubject?.name
 
+            let gradesfetchRequest = NSFetchRequest<StudentMO>(entityName: "StudentMO")
+            gradesfetchRequest.predicate = NSPredicate(format: "classroom == %@", (currentAssignment!.subject?.classroom)!)
+            do {
+                students = try moc!.fetch(gradesfetchRequest)
+            } catch {
+                print("couldn't find students")
+            }
+        } else {
+            studentTable.reloadData()
+            
+            
+            let entity = NSEntityDescription.entity(forEntityName: "AssignmentMO", in: moc!)!
+            
+            currentAssignment = NSManagedObject(entity: entity, insertInto: moc!) as? AssignmentMO
+        }
+        
 
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -70,14 +86,14 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         
         let entity = NSEntityDescription.entity(forEntityName: "AssignmentMO", in: moc!)!
 
-        newAssignment = NSManagedObject(entity: entity, insertInto: moc!) as? AssignmentMO
+        currentAssignment = NSManagedObject(entity: entity, insertInto: moc!) as? AssignmentMO
         
-        newAssignment?.name = assignmentName.text
-        newAssignment?.status = ActiveSwitch.isOn
-        newAssignment?.totalPoints = Int64(assignmentTotalPoints.text!)!
-        newAssignment?.subject = selectedSubject
+        currentAssignment?.name = assignmentName.text
+        currentAssignment?.status = ActiveSwitch.isOn
+        currentAssignment?.totalPoints = Int64(assignmentTotalPoints.text!)!
+        currentAssignment?.subject = selectedSubject
         
-        selectedSubject?.addToAssignments(newAssignment!)
+        selectedSubject?.addToAssignments(currentAssignment!)
         
         studentTable.reloadData()
     }
@@ -106,25 +122,48 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         let textField = sender as! UITextField
         let currentAssignmentCell:StudentAssignmentCell = textField.superview?.superview as! StudentAssignmentCell
         let currentStudent:StudentMO  = currentAssignmentCell.studentObj!
-        
-        let entity = NSEntityDescription.entity(forEntityName: "GradeMO", in: moc!)!
-        
-        let grade:GradeMO = NSManagedObject(entity: entity, insertInto: moc!) as! GradeMO
-        grade.assignment = newAssignment
-        grade.student = currentStudent
-        grade.score = Float(currentAssignmentCell.gradeField.text!)!
-        
-        currentStudent.addToGrades(grade)
-        
+        if currentAssignmentCell.gradeField.text! != "" {
+            
+            let gradesfetchRequest = NSFetchRequest<GradeMO>(entityName: "GradeMO")
+            gradesfetchRequest.predicate = NSPredicate(format: "student == %@ AND assignment == %@", currentStudent, currentAssignment!)
+            var grade:GradeMO
+            do {
+                let fetchedGrade:[GradeMO] = try moc!.fetch(gradesfetchRequest)
+                if fetchedGrade.count != 0 {
+                    grade = fetchedGrade[0]
+                    grade.score = Float(currentAssignmentCell.gradeField.text!)!
+                } else {
+                    let entity = NSEntityDescription.entity(forEntityName: "GradeMO", in: moc!)!
+                    
+                    grade = NSManagedObject(entity: entity, insertInto: moc!) as! GradeMO
+                    grade.assignment = currentAssignment
+                    grade.student = currentStudent
+                    grade.score = Float(currentAssignmentCell.gradeField.text!)!
+                    
+                    currentStudent.addToGrades(grade)
+                    
+                }
+            } catch {
+                let entity = NSEntityDescription.entity(forEntityName: "GradeMO", in: moc!)!
+                
+                grade = NSManagedObject(entity: entity, insertInto: moc!) as! GradeMO
+                grade.assignment = currentAssignment
+                grade.student = currentStudent
+                grade.score = Float(currentAssignmentCell.gradeField.text!)!
+                
+                currentStudent.addToGrades(grade)
+            }
+            
+        }
         currentTextField = nil
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
 
-        newAssignment?.name = assignmentName.text
-        newAssignment?.status = ActiveSwitch.isOn
-        newAssignment?.totalPoints = Int64(assignmentTotalPoints.text!)!
-        newAssignment?.subject = selectedSubject
+        currentAssignment?.name = assignmentName.text
+        currentAssignment?.status = ActiveSwitch.isOn
+        currentAssignment?.totalPoints = Int64(assignmentTotalPoints.text!)!
+        currentAssignment?.subject = selectedSubject
 
         do {
             try moc?.save()
@@ -153,6 +192,20 @@ class CreateAssignmentViewController: UIViewController, UITableViewDataSource, U
         cell.assignmentStudentName.text = students[indexPath.last!].name
         cell.studentObj = students[indexPath.last!]
         cell.totalPoints.text = "/\(assignmentTotalPoints.text ?? "total")"
+
+        let gradesfetchRequest = NSFetchRequest<GradeMO>(entityName: "GradeMO")
+        gradesfetchRequest.predicate = NSPredicate(format: "student == %@ AND assignment == %@", students[indexPath.last!], currentAssignment!)
+        
+        do {
+            let fetchedGrade:[GradeMO] = try moc!.fetch(gradesfetchRequest)
+            if fetchedGrade.count != 0 {
+                cell.gradeField.text = "\(fetchedGrade[0].score)"
+            }
+        } catch {
+            //fatalError("Failed to fetch Subjects: \(error)")
+        }
+
+        //cell.gradeField.text =
         
         return cell
     }
